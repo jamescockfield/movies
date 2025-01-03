@@ -14,6 +14,9 @@ The project contains an API to create new users and make ratings
 In progress
 ===========
 :earth_africa: add script to pull movie data and persist locally
+
 :rocket: basic React / Material UI or similar frontend
+
 :chart: api to create users / submit ratings
+
 :closed_lock_with_key: api auth
