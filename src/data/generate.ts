@@ -1,11 +1,23 @@
 import dotenv from 'dotenv';
 import { MovieResult } from 'moviedb-promise';
-import { User, MovieRating, UserRatings } from '../types';
+import { User, MovieRating, UserRatings } from '../types/types';
 import { tmdb } from '../utils';
 
 dotenv.config();
 
-// Define users and their preferences
+const genres: string[] = [
+    'Science Fiction', 
+    'Horror', 
+    'Action', 
+    'Comedy', 
+    'Drama', 
+    'Romance', 
+    'Thriller', 
+    'Animation', 
+    'Fantasy', 
+    'Documentary'
+];
+
 const users: User[] = [
     { id: 1, preference: 'Science Fiction', genreId: 878 },
     { id: 2, preference: 'Horror', genreId: 27 },
@@ -35,8 +47,8 @@ async function generateUserRatings(user: User): Promise<MovieRating[]> {
             .slice(0, 20)
             .map((movie: MovieResult) => ({
                 userId: user.id,
-                movieId: movie.id as number,
-                movieTitle: movie.title as string,
+                movieId: movie.id!,
+                movieTitle: movie.title!,
                 rating: Math.floor(Math.random() * 5) + 6, // Generate rating between 6-10
                 genre: user.preference
             }));
@@ -62,4 +74,4 @@ async function generateAllUserRatings(users: User[]): Promise<UserRatings> {
     return allRatings;
 }
 
-export { users, generateUserRatings, generateAllUserRatings };
+export { genres, users, generateUserRatings, generateAllUserRatings };

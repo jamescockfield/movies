@@ -1,6 +1,6 @@
-import { UserRatings } from '../types';
+import { UserRatings } from '../types/types';
 import { MongooseConnection } from '../database/MongooseConnection';
-import { MovieRating } from '../database/MovieRating';
+import { MovieRating } from '../database/model/MovieRating';
 import { users, generateAllUserRatings } from './generate';
 
 

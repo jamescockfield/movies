@@ -4,6 +4,11 @@ interface User {
     genreId: number;
 }
 
+interface Genre {
+    id: number;
+    name: string;
+}
+
 interface MovieRating {
     userId: number;
     movieId: number;
@@ -16,4 +21,4 @@ interface UserRatings {
     [key: number]: MovieRating[];
 }
 
-export { User, MovieRating, UserRatings };
+export { User, MovieRating, UserRatings, Genre };

@@ -1,6 +1,9 @@
 import mongoose from 'mongoose';
+import { MovieRating } from '../../types/types';
 
-const MovieRatingSchema = new mongoose.Schema({
+type MovieRatingDocument = MovieRating & mongoose.Document;
+
+const MovieRatingSchema = new mongoose.Schema<MovieRatingDocument>({
     userId: Number,
     movieId: Number,
     movieTitle: String,

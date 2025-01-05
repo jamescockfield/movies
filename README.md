@@ -13,6 +13,10 @@ The project contains an API to create new users and make ratings
 
 In progress
 ===========
+Deploy process on merge with jenkins
+
+Host on AWS
+
 :earth_africa: add script to pull movie data and persist locally
 
 :rocket: basic React / Material UI or similar frontend
