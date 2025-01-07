@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
-import { MovieResult } from 'moviedb-promise';
+import { MovieType } from '../../types/types';
 
-type MovieDocument = MovieResult & mongoose.Document;
+type MovieDocument = MovieType & mongoose.Document;
 
 const MovieSchema = new mongoose.Schema<MovieDocument>({
     adult: Boolean,
@@ -17,9 +17,10 @@ const MovieSchema = new mongoose.Schema<MovieDocument>({
     video: Boolean,
     vote_average: Number,
     vote_count: Number,
-    genre_ids: [Number]
+    genre_ids: [Number],
+    genreId: Number // Primary genre of the movie for simplicity
 });
 
 const Movie = mongoose.model('Movie', MovieSchema);
 
-export { Movie };
+export { Movie, MovieDocument };

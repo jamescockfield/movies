@@ -1,24 +1,23 @@
-interface User {
+import { MovieResult } from 'moviedb-promise';
+
+type MovieType = MovieResult & { genreId: number };
+
+// TODO: consider inferring these types from mongoose schemas
+
+interface UserType {
     id: number;
-    preference: string;
     genreId: number;
 }
 
-interface Genre {
+interface GenreType {
     id: number;
     name: string;
 }
 
-interface MovieRating {
+interface MovieRatingType {
     userId: number;
     movieId: number;
-    movieTitle: string;
     rating: number;
-    genre: string;
 }
 
-interface UserRatings {
-    [key: number]: MovieRating[];
-}
-
-export { User, MovieRating, UserRatings, Genre };
+export { UserType, MovieType, MovieRatingType, GenreType };

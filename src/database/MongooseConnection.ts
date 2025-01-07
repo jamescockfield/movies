@@ -1,14 +1,13 @@
 import mongoose from 'mongoose';
-import { MongoMemoryServer } from 'mongodb-memory-server';
 
+// TODO: consider just using the mongoose connection object directly
 class MongooseConnection {
 
-    mongod: MongoMemoryServer | undefined;
+    constructor(private mongoUrl: string) {
+    }
 
-    async connectToMemoryDB() {
-        this.mongod = await MongoMemoryServer.create();
-        const uri = this.mongod.getUri();
-        await mongoose.connect(uri);
+    async connect() {
+        await mongoose.connect(this.mongoUrl);
     }
 
     async disconnect() {
