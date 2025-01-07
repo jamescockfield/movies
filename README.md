@@ -11,6 +11,15 @@ The project then runs tensorflow to generate movie recommendations for each user
 The project contains an API to create new users and make ratings
 
 
+How to run
+==========
+```bash
+docker-compose up -d
+npm run seed
+npm run start
+```
+
+
 In progress
 ===========
 :rocket: Deploy process on merge with jenkins
