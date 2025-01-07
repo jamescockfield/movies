@@ -7,7 +7,11 @@ class MongooseConnection {
     }
 
     async connect() {
+        console.log('Connecting to MongoDB:', this.mongoUrl);
+
         await mongoose.connect(this.mongoUrl);
+
+        console.log('Connected to MongoDB. Readystate: ', mongoose.connection.readyState);
     }
 
     async disconnect() {

@@ -6,6 +6,12 @@ import { MovieType } from '../types/types';
 import { Genre } from '../database/model/Genre';
 
 async function downloadMovies() {
+    if (await Movie.exists({})) {
+        console.log('Movies already exist in database, skipping');
+
+        return;
+    }
+
     const genres = await Genre.find();
     
     const movies: MovieType[] = [];
@@ -27,7 +33,11 @@ async function downloadMovies() {
         }
     }
 
+    console.log(`Inserting ${movies.length} movies into database`);
+
     await Movie.insertMany(movies);
+
+    console.log('Movies inserted');
 }
 
 async function getMoviesForGenre(genreId: number): Promise<MovieType[]> {

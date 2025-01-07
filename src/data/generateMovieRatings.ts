@@ -17,6 +17,12 @@ interface MoviesByGenre {
  * For each user, generate 20 random ratings for movies in their preferred genre
  */
 async function generateMovieRatings() {
+    if (await MovieRating.exists({})) {
+        console.log('Movie ratings already exist in database, skipping');
+
+        return;
+    }
+
     const moviesByGenre: MoviesByGenre[] = await getMoviesAggregatedByGenre();
 
     const movieRatings: MovieRatingType[] = [];
@@ -25,6 +31,8 @@ async function generateMovieRatings() {
 
     // Generate ratings for each user
     for (const user of users) {
+        console.log(`Generating ratings for user ${user.id}`);
+
         moviesByGenre.find(movies => movies._id === user.genreId)!.movies.forEach(movie => {
             movieRatings.push({
                 userId: user.id,
@@ -34,7 +42,11 @@ async function generateMovieRatings() {
         });
     }
 
+    console.log(`Inserting ${movieRatings.length} movie ratings into database`);
+
     await MovieRating.insertMany(movieRatings, { ordered: false });
+
+    console.log('Movie ratings inserted');
 }
 
 async function getMoviesAggregatedByGenre(): Promise<MoviesByGenre[]> {
@@ -44,17 +56,31 @@ async function getMoviesAggregatedByGenre(): Promise<MoviesByGenre[]> {
     // Get 20 movies for each genre grouped by genreId
     const moviesByGenre: MoviesByGenre[] = await Movie.aggregate([
         { $match: { genreId: { $in: genreIds } } },
+        { $sort: { _id: -1 } },
         { $group: {
-            _id: "$genreId",
-            movies: { 
-                $push: {
-                    $cond: {
-                        if: { $lt: [{ $size: "$movies" }, 20] },
-                        then: "$$ROOT",
-                        else: "$$PRUNE"
-                    }
+            _id: {
+                genreId: "$genreId",
+                docId: { 
+                    $mod: [ // pretty esoteric hack to only retrieve 20 movies per genre
+                        { $floor: { 
+                            $divide: [
+                                { $convert: { 
+                                    input: "$_id", 
+                                    to: "double",
+                                    onError: 0 
+                                }}, 
+                                20
+                            ] 
+                        }}, 
+                        1
+                    ] 
                 }
-            }
+            },
+            movies: { $push: "$$ROOT" }
+        }},
+        { $group: {
+            _id: "$_id.genreId",
+            movies: { $first: "$movies" }
         }}
     ]);
 
