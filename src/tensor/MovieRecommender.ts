@@ -1,30 +1,40 @@
 import tf from '@tensorflow/tfjs-node';
 
 class MovieRecommender {
-
-    private model: tf.Sequential;
+    private model: tf.LayersModel;
 
     constructor(numUsers: number, numMovies: number, embeddingDim = 50) {
-        this.model = tf.sequential();
-        
-        // User embedding
-        this.model.add(tf.layers.embedding({
+        // Create input layers
+        const userInput = tf.input({shape: [1]});
+        const movieInput = tf.input({shape: [1]});
+
+        // Create embedding layers
+        const userEmbedding = tf.layers.embedding({
             inputDim: numUsers,
-            outputDim: embeddingDim,
-            inputLength: 1
-        }));
-        
-        // Movie embedding
-        this.model.add(tf.layers.embedding({
+            outputDim: embeddingDim
+        }).apply(userInput);
+
+        const movieEmbedding = tf.layers.embedding({
             inputDim: numMovies,
-            outputDim: embeddingDim,
-            inputLength: 1
-        }));
-        
-        // Merge embeddings and add dense layers
-        this.model.add(tf.layers.flatten());
-        this.model.add(tf.layers.dense({ units: 1, activation: 'sigmoid' }));
-        
+            outputDim: embeddingDim
+        }).apply(movieInput);
+
+        // Flatten embeddings
+        const userFlat = tf.layers.flatten().apply(userEmbedding) as tf.SymbolicTensor;
+        const movieFlat = tf.layers.flatten().apply(movieEmbedding) as tf.SymbolicTensor;
+
+        // Concatenate embeddings
+        const concat = tf.layers.concatenate().apply([userFlat, movieFlat]);
+
+        // Add dense layers
+        const dense = tf.layers.dense({units: 1, activation: 'sigmoid'}).apply(concat) as tf.SymbolicTensor;
+
+        // Create model
+        this.model = tf.model({
+            inputs: [userInput, movieInput],
+            outputs: dense
+        });
+
         this.model.compile({
             optimizer: 'adam',
             loss: 'meanSquaredError'

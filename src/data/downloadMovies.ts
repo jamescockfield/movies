@@ -5,6 +5,9 @@ import { Movie } from '../database/model/Movie';
 import { MovieType } from '../types/types';
 import { Genre } from '../database/model/Genre';
 
+// TODO: need to ensure downloaded movies are unique
+// TODO: need to normalise movieIds to be sequential
+
 async function downloadMovies() {
     if (await Movie.exists({})) {
         console.log('Movies already exist in database, skipping');
