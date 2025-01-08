@@ -1,8 +1,8 @@
-import tf from '@tensorflow/tfjs';
+import tf from '@tensorflow/tfjs-node';
 
 class MovieRecommender {
 
-    model: tf.Sequential;
+    private model: tf.Sequential;
 
     constructor(numUsers: number, numMovies: number, embeddingDim = 50) {
         this.model = tf.sequential();
@@ -50,6 +50,14 @@ class MovieRecommender {
             ]) as tf.Tensor;
             return prediction.dataSync()[0];
         });
+    }
+
+    async saveModel(path: string) {
+        await this.model.save(`file://${path}`);
+    }
+
+    async loadModel(path: string) {
+        this.model = tf.sequential({ layers: (await tf.loadLayersModel(`file://${path}`)).layers });
     }
 }
 

@@ -1,30 +1,42 @@
-import express from 'express';
-import cors from 'cors';
 import dotenv from 'dotenv';
-import { MovieRecommenderManager } from './tensor/MovieRecommenderManager'; 
+import { app } from './app/app';
+import { recommender } from './app/utils';
+import { MongooseConnection } from './database/MongooseConnection';
+import { Genre } from './database/model/Genre';
+import { Movie } from './database/model/Movie';
+import { MovieRating } from './database/model/MovieRating';
+import { User } from './database/model/User';
 
 dotenv.config();
 
+async function start() {
+    if (!(await checkSeeded())) {
+        console.log('Seeding was not completed. Please run `npm run seed` before starting the server');
+        process.exit(1);
+    }
 
-const recommender = new MovieRecommenderManager();
-recommender.train();
+    const mongooseConnection = new MongooseConnection(process.env.MONGODB_URI!);
+    await mongooseConnection.connect();
 
-const app = express();
-app.use(cors());
-app.use(express.json());
+    console.log('Loading recommender model...');
+    await recommender.init();
+    await recommender.loadModel();
+    console.log('Recommender model recommender loaded');
 
-app.get('/', (req, res) => {
-    res.end('Hello World!');
-});
+    const PORT = process.env.PORT || 3000;
+    app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+    });
+}
 
-app.get('/recommend/:userId', (req, res) => {
-    const userId = parseInt(req.params.userId);
-    const recommendations = recommender.recommend(userId);
+async function checkSeeded(): Promise<boolean> {
+    return (
+        !!(await Genre.exists({})) &&
+        !!(await Movie.exists({})) &&
+        !!(await User.exists({})) &&
+        !!(await MovieRating.exists({})) &&
+        recommender.modelExists()
+    );
+}
 
-    res.json(recommendations);
-});
-
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-});
+start();

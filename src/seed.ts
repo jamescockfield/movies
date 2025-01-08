@@ -1,15 +1,16 @@
+import dotenv from 'dotenv';
 import { downloadGenres } from './data/downloadGenres';
 import { downloadMovies } from './data/downloadMovies';
 import { generateUsers } from './data/generateUsers';
 import { generateMovieRatings } from './data/generateMovieRatings';
 import { MongooseConnection } from './database/MongooseConnection';
-import dotenv from 'dotenv';
+import { recommender } from './app/utils';
 
 dotenv.config();
 
 async function seed() {
     const mongooseConnection = new MongooseConnection(process.env.MONGODB_URI!);
-    mongooseConnection.connect();
+    await mongooseConnection.connect();
 
     await downloadGenres();
     await downloadMovies();
@@ -17,6 +18,17 @@ async function seed() {
     await generateMovieRatings();
 
     console.log('Seeding complete');
+
+    if (recommender.modelExists()) {
+        console.log('Model already exists, skipping training');
+    } else {
+        console.log('Training new model...');
+        await recommender.init();
+        await recommender.train();
+        await recommender.saveModel();
+        console.log('Model training complete');
+    }
+
     process.exit(0);
 }
 
