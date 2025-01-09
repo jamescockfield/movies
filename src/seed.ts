@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { downloadGenres } from './data/downloadGenres';
-import { downloadMovies } from './data/downloadMovies';
+import { MovieDownloader } from './data/MovieDownloader';
 import { generateUsers } from './data/generateUsers';
 import { generateMovieRatings } from './data/generateMovieRatings';
 import { MongooseConnection } from './database/MongooseConnection';
@@ -13,7 +13,7 @@ async function seed() {
     await mongooseConnection.connect();
 
     await downloadGenres();
-    await downloadMovies();
+    await new MovieDownloader().downloadMovies();
     await generateUsers();
     await generateMovieRatings();
 

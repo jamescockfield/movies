@@ -1,6 +1,6 @@
 import { MovieResult } from 'moviedb-promise';
 
-type MovieType = MovieResult & { genreId: number };
+type MovieType = MovieResult & { genreId: number, sequentialId: number };
 
 // TODO: consider inferring these types from mongoose schemas
 
