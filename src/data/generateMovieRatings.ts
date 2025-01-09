@@ -36,7 +36,7 @@ async function generateMovieRatings() {
         moviesByGenre.find(movies => movies._id === user.genreId)!.movies.forEach(movie => {
             movieRatings.push({
                 userId: user.id,
-                movieId: movie.id!,
+                movieId: movie.sequentialId,
                 rating: Math.floor(Math.random() * 5) + 6,
             });
         });

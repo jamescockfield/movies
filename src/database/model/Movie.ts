@@ -18,7 +18,8 @@ const MovieSchema = new mongoose.Schema<MovieDocument>({
     vote_average: Number,
     vote_count: Number,
     genre_ids: [Number],
-    genreId: Number // Primary genre of the movie for simplicity
+    genreId: Number, // Primary genre of the movie for simplicity
+    sequentialId: Number, // Sequential IDs for model training
 });
 
 const Movie = mongoose.model('Movie', MovieSchema);

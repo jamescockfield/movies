@@ -8,21 +8,21 @@ import { User } from '../database/model/User';
 
 class MovieRecommenderManager {
 
-    MODEL_PATH = path.join(process.cwd(), 'model.json');
+    MODEL_PATH = path.join(process.cwd(), 'model');
     recommender?: MovieRecommender;
 
     async init() {
-        const numUsers = await User.countDocuments();
-        const numMovies = await Movie.countDocuments();
-        this.recommender = new MovieRecommender(numUsers, numMovies);
+        const userIds = (await User.find()).map(user => user.id);
+        const movieIds = (await Movie.find()).map(movie => movie.sequentialId);
+        this.recommender = new MovieRecommender(userIds, movieIds);
     }
 
     async saveModel() {
-        this.recommender?.saveModel(this.MODEL_PATH);
+        await this.recommender?.saveModel(this.MODEL_PATH);
     }
 
     async loadModel() {
-        this.recommender?.loadModel(this.MODEL_PATH);
+        await this.recommender?.loadModel(this.MODEL_PATH);
     }
 
     modelExists(): boolean {
