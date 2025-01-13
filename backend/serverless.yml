@@ -1,0 +1,21 @@
+provider:
+  name: aws
+  runtime: nodejs18.x
+  region: eu-west-1
+  environment:
+    MONGODB_URI: ${ssm:/database/mongodb/uri~true}
+    TMDB_API_KEY: ${ssm:/api/tmdb/key~true}
+
+functions:
+  movieSearch:
+    handler: backend/handlers/search.handler
+    events:
+      - http:
+          path: /movies/search
+          method: get
+  saveMovie:
+    handler: backend/handlers/save.handler
+    events:
+      - http:
+          path: /movies
+          method: post
