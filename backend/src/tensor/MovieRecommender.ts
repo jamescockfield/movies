@@ -85,15 +85,28 @@ class MovieRecommender {
     }
 
     predict(userId: number, movieId: number): number {
+        if (!this.userIdToIndex || !this.movieIdToIndex) {
+            throw new Error('Model mappings not initialized');
+        }
+
+        const userIndex = this.userIdToIndex.get(userId);
+        const movieIndex = this.movieIdToIndex.get(movieId);
+
+        if (userIndex === undefined || movieIndex === undefined) {
+            // TODO: troubleshoot why we get this error
+            throw new Error('Invalid user or movie ID');
+        }
+
         return tf.tidy(() => {
-            const userIndex = this.userIdToIndex.get(userId)!;
-            const movieIndex = this.movieIdToIndex.get(movieId)!;
+            // Create tensors with explicit shapes and data types
+            const userTensor = tf.tensor2d([[userIndex]], [1, 1], 'float32');
+            const movieTensor = tf.tensor2d([[movieIndex]], [1, 1], 'float32');
+
+            const prediction = this.model.predict([userTensor, movieTensor]) as tf.Tensor;
+            const result = prediction.dataSync()[0];
             
-            const prediction = this.model.predict([
-                tf.tensor2d([userIndex], [1, 1]),
-                tf.tensor2d([movieIndex], [1, 1])
-            ]) as tf.Tensor;
-            return prediction.dataSync()[0];
+            // Convert prediction back to 5-star scale
+            return Math.round(result * 5 * 10) / 10;
         });
     }
 
@@ -102,7 +115,12 @@ class MovieRecommender {
     }
 
     async loadModel(path: string) {
-        this.model = tf.sequential({ layers: (await tf.loadLayersModel(`file://${path}`)).layers });
+        this.model = await tf.loadLayersModel(`file://${path}`);
+        
+        this.model.compile({
+            optimizer: 'adam',
+            loss: 'meanSquaredError'
+        });
     }
 }
 

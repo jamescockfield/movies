@@ -10,21 +10,22 @@ import { User } from './database/model/User';
 dotenv.config();
 
 async function start() {
+    const mongooseConnection = new MongooseConnection(process.env.MONGODB_URI!);
+    await mongooseConnection.connect();
+
     if (!(await checkSeeded())) {
         console.log('Seeding was not completed. Please run `npm run seed` before starting the server');
         process.exit(1);
     }
-
-    const mongooseConnection = new MongooseConnection(process.env.MONGODB_URI!);
-    await mongooseConnection.connect();
 
     console.log('Loading recommender model...');
     await recommender.init();
     await recommender.loadModel();
     console.log('Recommender model recommender loaded');
 
-    const PORT = process.env.PORT || 3000;
-    app.listen(PORT, () => {
+    const PORT = parseInt(process.env.PORT || '3000');
+    const HOST = process.env.HOST || '0.0.0.0';
+    app.listen(PORT, HOST, () => {
         console.log(`Server running on port ${PORT}`);
     });
 }

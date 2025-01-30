@@ -8,7 +8,7 @@ import { User } from '../database/model/User';
 
 class MovieRecommenderManager {
 
-    MODEL_PATH = path.join(process.cwd(), 'model');
+    MODEL_PATH = path.join(process.cwd(), 'model/model.json');
     recommender?: MovieRecommender;
 
     async init() {
