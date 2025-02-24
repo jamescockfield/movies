@@ -16,7 +16,7 @@ export class User extends Document {
   declare createdAt: Date;
 
   @Prop({ required: true })
-  declare genreId: number;
+  declare genreId: number; // For now for simplicity, each user has a genre preference
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

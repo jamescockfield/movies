@@ -2,14 +2,20 @@ import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Genre } from '../../genre/genre.schema';
-
-// TODO: consider downloading genres from TMDB to ensure our genres have the correct ids
+import { genres } from '../../genre/genres';
+import { MovieDb } from 'moviedb-promise';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class GenresSeederService {
+  private movieDb: MovieDb;
+
   constructor(
     @InjectModel(Genre.name) private readonly genreModel: Model<Genre>,
-  ) {}
+    private configService: ConfigService,
+  ) {
+    this.movieDb = new MovieDb(this.configService.get('TMDB_API_KEY')!);
+  }
 
   async generate(): Promise<void> {
     if (await this.genreModel.exists({})) {
@@ -17,19 +23,28 @@ export class GenresSeederService {
       return;
     }
 
-    const genres: Partial<Genre>[] = [
-      { id: 1, name: 'Action' },
-      { id: 2, name: 'Comedy' },
-      { id: 3, name: 'Drama' },
-      { id: 4, name: 'Horror' },
-      { id: 5, name: 'Romance' },
-      { id: 6, name: 'Thriller' },
-      { id: 7, name: 'Science Fiction' },
-      { id: 8, name: 'Fantasy' },
-    ];
+    console.log('Downloading genres from TMDB...');
+    const response = await this.movieDb.genreMovieList();
+    const tmdbGenres = response.genres;
+    
+    if (!tmdbGenres) {
+      throw new Error('Failed to fetch genres from TMDB');
+    }
 
-    console.log(`Inserting ${genres.length} genres into database`);
-    await this.genreModel.insertMany(genres, { ordered: false });
+    // Map our genre names to TMDB genres to get their IDs
+    const genresToInsert = genres.map(genreName => {
+      const tmdbGenre = tmdbGenres.find(g => g.name?.toLowerCase() === genreName.toLowerCase());
+      if (!tmdbGenre) {
+        throw new Error(`Could not find TMDB genre for: ${genreName}`);
+      }
+      return {
+        id: tmdbGenre.id,
+        name: tmdbGenre.name
+      };
+    });
+
+    console.log(`Inserting ${genresToInsert.length} genres into database`);
+    await this.genreModel.insertMany(genresToInsert, { ordered: false });
     console.log('Genres inserted');
   }
 } 

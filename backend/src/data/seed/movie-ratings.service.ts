@@ -51,6 +51,8 @@ export class MovieRatingsSeederService {
     const genres = await this.genreModel.find();
     const genreIds = genres.map(genre => genre.id);
 
+    // TODO: test aggregation to ensure it still works
+    
     return this.movieModel.aggregate([
       { $match: { genreId: { $in: genreIds } } },
       { $sort: { _id: -1 } },

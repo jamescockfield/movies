@@ -6,22 +6,18 @@ import { UserModule } from './user/user.module';
 import { RecommenderModule } from './recommender/recommender.module';
 import { GenreModule } from './genre/genre.module';
 import { AuthModule } from './auth/auth.module';
+import { SeedModule } from './data/seed/seed.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot(),
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI'),
-      }),
-      inject: [ConfigService],
-    }),
+    MongooseModule.forRoot(process.env.MONGODB_URI!),
     MovieModule,
     UserModule,
     RecommenderModule,
     GenreModule,
     AuthModule,
+    SeedModule,
   ],
 })
 export class AppModule {}

@@ -18,16 +18,11 @@ export class UsersSeederService {
     }
 
     const genres = await this.genreModel.find().lean().exec();
-    const users: Partial<User>[] = [];
-
-    for (let i = 1; i <= 100; i++) {
-      const randomGenre = genres[Math.floor(Math.random() * genres.length)];
-      users.push({
-        id: i,
-        username: `User ${i}`,
-        genreId: randomGenre.id,
-      });
-    }
+    const users: Partial<User>[] = genres.map((genre, index) => ({
+      id: index + 1,
+      username: `User ${index + 1}`,
+      genreId: genre.id,
+    }));
 
     console.log(`Inserting ${users.length} users into database`);
     await this.userModel.insertMany(users, { ordered: false });
