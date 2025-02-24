@@ -1,6 +1,6 @@
 import dotenv from 'dotenv';
 import { MovieDb } from 'moviedb-promise';
-import { MovieRecommenderManager } from '../tensor/MovieRecommenderManager';
+import { MovieRecommenderManager } from '../recommender/MovieRecommenderManager';
 
 dotenv.config();
 

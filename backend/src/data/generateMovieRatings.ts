@@ -1,16 +1,12 @@
-import { User } from '../database/model/User';
-import { Genre } from '../database/model/Genre';
-import { Movie } from '../database/model/Movie';
-import { MovieRating } from '../database/model/MovieRating';
-import { UserType } from '../types/types';
-import { MovieType } from '../types/types';
-import { MovieRatingType } from '../types/types';
-import { GenreType } from '../types/types';
+import { User } from '../user/user.schema';
+import { Genre } from '../genre/genre.schema';
+import { Movie } from '../movie/movie.schema';
+import { MovieRating } from '../movie-rating/movie-rating.schema';
 
 // Helper type for retrieving movies from DB by genre
 interface MoviesByGenre {
   _id: number;  // genreId
-  movies: MovieType[];
+  movies: Movie[];
 }
 
 /**
@@ -19,15 +15,14 @@ interface MoviesByGenre {
 async function generateMovieRatings() {
     if (await MovieRating.exists({})) {
         console.log('Movie ratings already exist in database, skipping');
-
         return;
     }
 
     const moviesByGenre: MoviesByGenre[] = await getMoviesAggregatedByGenre();
 
-    const movieRatings: MovieRatingType[] = [];
+    const movieRatings: Partial<MovieRating>[] = [];
 
-    const users: UserType[] = await User.find().lean().exec();
+    const users: User[] = await User.find().lean().exec();
 
     // Generate ratings for each user
     for (const user of users) {
@@ -50,7 +45,7 @@ async function generateMovieRatings() {
 }
 
 async function getMoviesAggregatedByGenre(): Promise<MoviesByGenre[]> {
-    const genres: GenreType[] = await Genre.find();
+    const genres: Genre[] = await Genre.find();
     const genreIds: number[] = genres.map(genre => genre.id);
 
     // Get 20 movies for each genre grouped by genreId

@@ -1,19 +1,28 @@
 import fs from 'fs';
 import path from 'path';
-import { MovieRating } from '../database/model/MovieRating';
+import { MovieRating } from '../movie-rating/movie-rating.schema';
 import { MovieRecommender } from './MovieRecommender';
-import { Movie } from '../database/model/Movie';
+import { Movie } from '../movie/movie.schema';
 import { MovieRatingType, MovieType } from '../types/types';
-import { User } from '../database/model/User';
+import { User } from '../user/user.schema';
+import { UserService } from '../user/user.service';
+import { MovieService } from '../movie/movie.service';
+import { MovieRatingService } from '../movie-rating/movie-rating.service';
 
 class MovieRecommenderManager {
 
     MODEL_PATH = path.join(process.cwd(), 'model/model.json');
     recommender?: MovieRecommender;
 
+    constructor(
+      private readonly userService: UserService,
+      private readonly movieService: MovieService,
+      private readonly movieRatingService: MovieRatingService,
+    ) {}
+
     async init() {
-        const userIds = (await User.find()).map(user => user.id);
-        const movieIds = (await Movie.find()).map(movie => movie.sequentialId);
+        const userIds = (await this.userService.findAll()).map(user => user.id);
+        const movieIds = (await this.movieService.findAll()).movies.map(movie => movie.id);
         this.recommender = new MovieRecommender(userIds, movieIds);
     }
 
@@ -30,14 +39,14 @@ class MovieRecommenderManager {
     }
 
     async train() {
-        const ratings: MovieRatingType[] = await MovieRating.find();
+        const ratings: MovieRating[] = await this.movieRatingService.findAll();
 
         const userIds: number[] = [];
         const movieIds: number[] = [];
         const ratingValues: number[] = [];
 
         for (const rating of ratings) {
-            userIds.push(rating.userId);
+            userIds.push(rating.userId.id);
             movieIds.push(rating.movieId);
             ratingValues.push(rating.rating / 5.0); // Normalize ratings
         }
@@ -46,7 +55,8 @@ class MovieRecommenderManager {
     }
 
     async recommend(userId: number) {
-        const movies: MovieType[] = await Movie.find();
+        // TODO: review whether to store all movies in memory to save query all for each rec
+        const movies: Movie[] = (await this.movieService.findAll()).movies;
         const recommendations = movies.map(movie => ({
             movie: movie.title,
             score: this.recommender!.predict(userId, movie.id!)

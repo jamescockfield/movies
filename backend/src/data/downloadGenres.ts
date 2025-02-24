@@ -1,6 +1,6 @@
 import { tmdb } from '../app/utils';
 import { Genre } from '../database/model/Genre';
-import { genres } from '../domain/genres';
+import { genres } from '../genre/genres';
 
 async function downloadGenres() {
     if (await Genre.exists({})) {
