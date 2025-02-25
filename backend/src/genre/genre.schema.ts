@@ -3,10 +3,10 @@ import { Document } from 'mongoose';
 
 @Schema()
 export class Genre extends Document {
-  @Prop({ required: true, unique: true })
+  @Prop({ type: Number, required: true, unique: true })
   declare id: number;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   declare name: string;
 }
 

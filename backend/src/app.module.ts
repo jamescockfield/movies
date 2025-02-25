@@ -1,17 +1,15 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
-import { MongooseModule } from '@nestjs/mongoose';
+import { DatabaseModule } from './database/database.module';
 import { MovieModule } from './movie/movie.module';
 import { UserModule } from './user/user.module';
 import { RecommenderModule } from './recommender/recommender.module';
 import { GenreModule } from './genre/genre.module';
 import { AuthModule } from './auth/auth.module';
-import { SeedModule } from './data/seed/seed.module';
+import { SeedModule } from './seed/seed.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot(),
-    MongooseModule.forRoot(process.env.MONGODB_URI!),
+    DatabaseModule,
     MovieModule,
     UserModule,
     RecommenderModule,

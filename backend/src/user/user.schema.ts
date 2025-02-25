@@ -3,19 +3,19 @@ import { Document } from 'mongoose';
 
 @Schema()
 export class User extends Document {
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   declare username: string;
 
-  @Prop({ required: true })
+  @Prop({ type: String, required: true })
   declare password: string;
 
-  @Prop({ default: false })
+  @Prop({ type: Boolean, default: false })
   declare isAdmin: boolean;
 
-  @Prop({ default: Date.now })
+  @Prop({ type: Date, default: Date.now })
   declare createdAt: Date;
 
-  @Prop({ required: true })
+  @Prop({ type: Number, required: true })
   declare genreId: number; // For now for simplicity, each user has a genre preference
 }
 

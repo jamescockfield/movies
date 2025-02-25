@@ -6,12 +6,12 @@ export class CreateMovieRatingDto {
   @Type(() => Number)
   @Min(1)
   @Max(5)
-  rating: number;
+  declare rating: number;
 
   @IsString()
-  movieId: string;
+  declare movieId: string;
 
   @IsString()
   @IsOptional()
-  comment?: string;
+  declare comment?: string;
 } 

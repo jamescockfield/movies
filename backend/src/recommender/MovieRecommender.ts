@@ -1,4 +1,4 @@
-import tf from '@tensorflow/tfjs-node';
+import * as tf from '@tensorflow/tfjs';
 
 class MovieRecommender {
     private model: tf.LayersModel;

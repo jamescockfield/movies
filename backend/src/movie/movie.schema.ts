@@ -4,52 +4,52 @@ import { Document } from 'mongoose';
 
 @Schema()
 export class Movie extends Document {
-  @Prop()
+  @Prop({ type: Boolean })
   declare adult: boolean;
 
-  @Prop()
+  @Prop({ type: String })
   declare backdrop_path: string;
 
-  @Prop()
+  @Prop({ type: Number })
   declare id: number;
 
-  @Prop()
+  @Prop({ type: String })
   declare original_language: string;
 
-  @Prop()
+  @Prop({ type: String })
   declare original_title: string;
 
-  @Prop()
+  @Prop({ type: String })
   declare overview: string;
 
-  @Prop()
+  @Prop({ type: Number })
   declare popularity: number;
 
-  @Prop()
+  @Prop({ type: String })
   declare poster_path: string;
 
-  @Prop()
+  @Prop({ type: String })
   declare release_date: string;
 
-  @Prop()
+  @Prop({ type: String })
   declare title: string;
 
-  @Prop()
+  @Prop({ type: Boolean })
   declare video: boolean;
 
-  @Prop()
+  @Prop({ type: Number })
   declare vote_average: number;
 
-  @Prop()
+  @Prop({ type: Number })
   declare vote_count: number;
 
-  @Prop([Number])
+  @Prop({ type: [Number] })
   declare genre_ids: number[];
 
-  @Prop()
+  @Prop({ type: Number })
   declare genreId: number;
 
-  @Prop()
+  @Prop({ type: Number })
   declare sequentialId: number;
 }
 

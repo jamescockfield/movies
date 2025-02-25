@@ -5,7 +5,7 @@ import { UsersSeederService } from './users.service';
 import { GenresSeederService } from './genres.service';
 import { MoviesSeederService } from './movies.service';
 import { MovieRatingsSeederService } from './movie-ratings.service';
-import { RecommenderService } from '../../recommender/recommender.service';
+import { RecommenderService } from '../recommender/recommender.service';
 
 @Injectable()
 export class SeedService {

@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Genre } from '../../genre/genre.schema';
-import { genres } from '../../genre/genres';
+import { Genre } from '../genre/genre.schema';
+import { genres } from '../genre/genres';
 import { MovieDb } from 'moviedb-promise';
 import { ConfigService } from '@nestjs/config';
 
