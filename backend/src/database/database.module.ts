@@ -4,17 +4,20 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '.env',
-    }),
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('MONGODB_URI'),
-      }),
       inject: [ConfigService],
-    }),
-  ],
+      useFactory: (configService: ConfigService) => {
+        const uri = configService.get<string>('MONGODB_URI');
+        console.log('MongoDB URI available:', uri);
+        if (!uri) {
+          console.error('MONGODB_URI is not defined in environment variables');
+        }
+        return {
+          uri
+        };
+      }
+    })
+  ]
 })
 export class DatabaseModule {} 

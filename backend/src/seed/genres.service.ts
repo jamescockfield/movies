@@ -1,20 +1,17 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Genre } from '../genre/genre.schema';
 import { genres } from '../genre/genres';
-import { MovieDb } from 'moviedb-promise';
-import { ConfigService } from '@nestjs/config';
+import { TmdbService } from './tmdb.service';
 
 @Injectable()
 export class GenresSeederService {
-  private movieDb: MovieDb;
-
   constructor(
     @InjectModel(Genre.name) private readonly genreModel: Model<Genre>,
-    private configService: ConfigService,
+    @Inject(TmdbService) private readonly tmdb: TmdbService,
   ) {
-    this.movieDb = new MovieDb(this.configService.get('TMDB_API_KEY')!);
+    console.log('GenresSeederService being constructed');
   }
 
   async generate(): Promise<void> {
@@ -24,7 +21,7 @@ export class GenresSeederService {
     }
 
     console.log('Downloading genres from TMDB...');
-    const response = await this.movieDb.genreMovieList();
+    const response = await this.tmdb.client.genreMovieList();
     const tmdbGenres = response.genres;
     
     if (!tmdbGenres) {

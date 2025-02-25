@@ -11,12 +11,25 @@ import { GenresSeederService } from './genres.service';
 import { MoviesSeederService } from './movies.service';
 import { SeedService } from './seed.service';
 import { DatabaseModule } from '../database/database.module';
+import { RecommenderService } from '../recommender/recommender.service';
+import { TmdbService } from './tmdb.service';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
-      envFilePath: '.env',
+      envFilePath: '../.env',
+      cache: false,
+      validate: (config: Record<string, unknown>) => {
+        const required = ['MONGODB_URI', 'TMDB_API_KEY'];
+        for (const key of required) {
+          console.log('key: ', config[key]);
+          if (!config[key]) {
+            throw new Error(`Missing required environment variable: ${key}`);
+          }
+        }
+        return config;
+      },
     }),
     DatabaseModule,
     MongooseModule.forFeature([
@@ -27,11 +40,34 @@ import { DatabaseModule } from '../database/database.module';
     ]),
   ],
   providers: [
-    SeedService,
-    UsersSeederService,
-    GenresSeederService,
-    MoviesSeederService,
-    MovieRatingsSeederService,
+    {
+      provide: TmdbService,
+      useClass: TmdbService,
+    },
+    {
+      provide: GenresSeederService,
+      useClass: GenresSeederService,
+    },
+    {
+      provide: UsersSeederService,
+      useClass: UsersSeederService,
+    },
+    {
+      provide: MoviesSeederService,
+      useClass: MoviesSeederService,
+    },
+    {
+      provide: MovieRatingsSeederService,
+      useClass: MovieRatingsSeederService,
+    },
+    {
+      provide: RecommenderService,
+      useClass: RecommenderService,
+    },
+    {
+      provide: SeedService,
+      useClass: SeedService,
+    },
   ],
   exports: [SeedService],
 })

@@ -1,24 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Movie } from '../movie/movie.schema';
 import { Genre } from '../genre/genre.schema';
-import { MovieDb } from 'moviedb-promise';
-import { ConfigService } from '@nestjs/config';
+import { TmdbService } from './tmdb.service';
 
 @Injectable()
 export class MoviesSeederService {
-  private movieDb: MovieDb;
   private readonly moviesPerGenre = 100;
   private readonly maxPages = 5; // TMDB returns 20 movies per page, so 5 pages = 100 movies
 
   constructor(
     @InjectModel(Movie.name) private readonly movieModel: Model<Movie>,
     @InjectModel(Genre.name) private readonly genreModel: Model<Genre>,
-    private configService: ConfigService,
-  ) {
-    this.movieDb = new MovieDb(this.configService.get('TMDB_API_KEY')!);
-  }
+    @Inject(TmdbService) private readonly tmdb: TmdbService,
+  ) {}
 
   async generate(): Promise<void> {
     if (await this.movieModel.exists({})) {
@@ -58,7 +54,7 @@ export class MoviesSeederService {
     const allMovies: any[] = [];
     
     for (let page = 1; page <= this.maxPages; page++) {
-      const response = await this.movieDb.discoverMovie({
+      const response = await this.tmdb.client.discoverMovie({
         with_genres: genreId.toString(),
         page,
         sort_by: 'popularity.desc',
