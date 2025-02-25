@@ -3,8 +3,6 @@ import path from 'path';
 import { MovieRating } from '../movie-rating/movie-rating.schema';
 import { MovieRecommender } from './MovieRecommender';
 import { Movie } from '../movie/movie.schema';
-import { MovieRatingType, MovieType } from '../types/types';
-import { User } from '../user/user.schema';
 import { UserService } from '../user/user.service';
 import { MovieService } from '../movie/movie.service';
 import { MovieRatingService } from '../movie-rating/movie-rating.service';
