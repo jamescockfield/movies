@@ -10,9 +10,7 @@ export class GenresSeederService {
   constructor(
     @InjectModel(Genre.name) private readonly genreModel: Model<Genre>,
     @Inject(TmdbService) private readonly tmdb: TmdbService,
-  ) {
-    console.log('GenresSeederService being constructed');
-  }
+  ) {}
 
   async generate(): Promise<void> {
     if (await this.genreModel.exists({})) {
@@ -40,8 +38,8 @@ export class GenresSeederService {
       };
     });
 
-    console.log(`Inserting ${genresToInsert.length} genres into database`);
     await this.genreModel.insertMany(genresToInsert, { ordered: false });
-    console.log('Genres inserted');
+
+    console.log(`Inserted ${genresToInsert.length} genres into database`);
   }
 } 

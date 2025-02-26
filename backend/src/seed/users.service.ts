@@ -21,11 +21,12 @@ export class UsersSeederService {
     const users: Partial<User>[] = genres.map((genre, index) => ({
       id: index + 1,
       username: `User ${index + 1}`,
+      password: 'password',
       genreId: genre.id,
     }));
 
-    console.log(`Inserting ${users.length} users into database`);
-    await this.userModel.insertMany(users, { ordered: false });
-    console.log('Users inserted');
+    const result = await this.userModel.insertMany(users, { ordered: false });
+
+    console.log(`Inserted ${result.length} users into database`);
   }
 } 

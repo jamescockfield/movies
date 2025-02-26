@@ -28,7 +28,9 @@ export class MovieRatingsSeederService {
 
     const moviesByGenre: MoviesByGenre[] = await this.getMoviesAggregatedByGenre();
     const movieRatings: Partial<MovieRating>[] = [];
-    const users = await this.userModel.find().lean().exec();
+
+    // const users = await this.userModel.find().lean().exec();
+    const users = await this.userModel.find();
 
     for (const user of users) {
       console.log(`Generating ratings for user ${user.id}`);
@@ -37,14 +39,14 @@ export class MovieRatingsSeederService {
         movieRatings.push({
           userId: user.id,
           movieId: movie.sequentialId,
-          rating: Math.floor(Math.random() * 5) + 6,
+          rating: Math.floor(Math.random() * 5) + 1,
         });
       });
     }
 
-    console.log(`Inserting ${movieRatings.length} movie ratings into database`);
-    await this.movieRatingModel.insertMany(movieRatings, { ordered: false });
-    console.log('Movie ratings inserted');
+    const result = await this.movieRatingModel.insertMany(movieRatings, { ordered: false });
+
+    console.log(`Inserted ${result.length} movie ratings into database`);
   }
 
   private async getMoviesAggregatedByGenre(): Promise<MoviesByGenre[]> {

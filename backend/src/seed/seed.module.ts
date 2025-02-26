@@ -20,16 +20,6 @@ import { TmdbService } from './tmdb.service';
       isGlobal: true,
       envFilePath: '../.env',
       cache: false,
-      validate: (config: Record<string, unknown>) => {
-        const required = ['MONGODB_URI', 'TMDB_API_KEY'];
-        for (const key of required) {
-          console.log('key: ', config[key]);
-          if (!config[key]) {
-            throw new Error(`Missing required environment variable: ${key}`);
-          }
-        }
-        return config;
-      },
     }),
     DatabaseModule,
     MongooseModule.forFeature([
@@ -40,34 +30,13 @@ import { TmdbService } from './tmdb.service';
     ]),
   ],
   providers: [
-    {
-      provide: TmdbService,
-      useClass: TmdbService,
-    },
-    {
-      provide: GenresSeederService,
-      useClass: GenresSeederService,
-    },
-    {
-      provide: UsersSeederService,
-      useClass: UsersSeederService,
-    },
-    {
-      provide: MoviesSeederService,
-      useClass: MoviesSeederService,
-    },
-    {
-      provide: MovieRatingsSeederService,
-      useClass: MovieRatingsSeederService,
-    },
-    {
-      provide: RecommenderService,
-      useClass: RecommenderService,
-    },
-    {
-      provide: SeedService,
-      useClass: SeedService,
-    },
+    TmdbService,
+    GenresSeederService,
+    UsersSeederService,
+    MoviesSeederService,
+    MovieRatingsSeederService,
+    RecommenderService,
+    SeedService,
   ],
   exports: [SeedService],
 })

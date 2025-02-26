@@ -45,9 +45,9 @@ export class MoviesSeederService {
       movies.push(...mappedMovies);
     }
 
-    console.log(`Inserting ${movies.length} movies into database`);
     await this.movieModel.insertMany(movies, { ordered: false });
-    console.log('Movies inserted');
+
+    console.log(`Inserted ${movies.length} movies into database`);
   }
 
   private async downloadMoviesForGenre(genreId: number): Promise<any[]> {

@@ -7,16 +7,9 @@ import { MongooseModule } from '@nestjs/mongoose';
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: (configService: ConfigService) => {
-        const uri = configService.get<string>('MONGODB_URI');
-        console.log('MongoDB URI available:', uri);
-        if (!uri) {
-          console.error('MONGODB_URI is not defined in environment variables');
-        }
-        return {
-          uri
-        };
-      }
+      useFactory: (configService: ConfigService) => ({
+        uri: configService.get<string>('MONGODB_URI')
+      })
     })
   ]
 })
