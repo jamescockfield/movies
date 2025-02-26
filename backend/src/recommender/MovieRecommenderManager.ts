@@ -1,5 +1,6 @@
 import fs from 'fs';
 import path from 'path';
+import { Inject, Injectable } from '@nestjs/common';
 import { MovieRating } from '../movie-rating/movie-rating.schema';
 import { MovieRecommender } from './MovieRecommender';
 import { Movie } from '../movie/movie.schema';
@@ -7,15 +8,18 @@ import { UserService } from '../user/user.service';
 import { MovieService } from '../movie/movie.service';
 import { MovieRatingService } from '../movie-rating/movie-rating.service';
 
+// TODO: this can probably be replaced with recommender service
+
+@Injectable()
 class MovieRecommenderManager {
 
     MODEL_PATH = path.join(process.cwd(), 'model/model.json');
     recommender?: MovieRecommender;
 
     constructor(
-      private readonly userService: UserService,
-      private readonly movieService: MovieService,
-      private readonly movieRatingService: MovieRatingService,
+      @Inject(UserService) private readonly userService: UserService,
+      @Inject(MovieService) private readonly movieService: MovieService,
+      @Inject(MovieRatingService) private readonly movieRatingService: MovieRatingService,
     ) {}
 
     async init() {

@@ -21,6 +21,9 @@ export class SeedService {
     @InjectModel('MovieRating') private readonly movieRatingModel: Model<any>,
   ) {}
 
+
+  // TODO: re-enable recommender seeding
+
   async seed(): Promise<void> {
     console.log('Starting database seeding...');
     
@@ -28,6 +31,7 @@ export class SeedService {
     await this.usersSeeder.generate();
     await this.moviesSeeder.generate();
     await this.movieRatingsSeeder.generate();
+    // await this.recommender.seedModel();
     
     console.log('Database seeding completed');
   }
@@ -39,8 +43,8 @@ export class SeedService {
       !!(await this.genreModel.exists({})) &&
       !!(await this.movieModel.exists({})) &&
       !!(await this.userModel.exists({})) &&
-      !!(await this.movieRatingModel.exists({})) &&
-      this.recommender.modelExists()
+      !!(await this.movieRatingModel.exists({})) 
+      // this.recommender.modelExists()
     );
   }
 } 

@@ -57,4 +57,14 @@ export class MovieRatingService {
   async hasAnyRatings(): Promise<boolean> {
     return (await this.movieRatingModel.countDocuments().exec()) > 0;
   }
+
+  async getRecentRatings() {
+    // Get ratings from last 30 days
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+    
+    return this.movieRatingModel.find({
+      createdAt: { $gte: thirtyDaysAgo }
+    }).exec();
+  }
 }

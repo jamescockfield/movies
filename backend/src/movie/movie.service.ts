@@ -78,4 +78,8 @@ export class MovieService {
     // This would need to be implemented based on your rating system
     return true;
   }
+
+  async findOne(movieId: number) {
+    return this.movieModel.findOne({ id: movieId });
+  }
 }

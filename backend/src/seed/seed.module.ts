@@ -10,9 +10,9 @@ import { GenresSeederService } from './genres.service';
 import { MoviesSeederService } from './movies.service';
 import { SeedService } from './seed.service';
 import { DatabaseModule } from '../database/database.module';
-import { RecommenderService } from '../recommender/recommender.service';
 import { TmdbService } from './tmdb.service';
 import { ConfigModule } from '../config/config.module';
+import { RecommenderModule } from '../recommender/recommender.module';
 
 @Module({
   imports: [
@@ -24,6 +24,7 @@ import { ConfigModule } from '../config/config.module';
       { name: Movie.name, schema: MovieSchema },
       { name: MovieRating.name, schema: MovieRatingSchema },
     ]),
+    RecommenderModule,
   ],
   providers: [
     TmdbService,
@@ -31,7 +32,6 @@ import { ConfigModule } from '../config/config.module';
     UsersSeederService,
     MoviesSeederService,
     MovieRatingsSeederService,
-    RecommenderService,
     SeedService,
   ],
   exports: [SeedService],

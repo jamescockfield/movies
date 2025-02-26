@@ -14,7 +14,8 @@ async function bootstrap() {
     forbidNonWhitelisted: true, // throws error if non-whitelisted properties are present
   }));
 
-  // Check if database is seeded
+  console.log('Checking if database is seeded...');
+
   const seedService = app.get(SeedService);
   if (!(await seedService.checkSeeded())) {
     console.log('Seeding was not completed. Please run `npm run seed` before starting the server');

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { MovieRecommenderManager } from './MovieRecommenderManager';
 import { MovieService } from '../movie/movie.service';
 import { MovieRatingService } from '../movie-rating/movie-rating.service';
@@ -6,10 +6,21 @@ import { MovieRatingService } from '../movie-rating/movie-rating.service';
 @Injectable()
 export class RecommenderService {
   constructor(
-    private readonly recommenderManager: MovieRecommenderManager,
-    private readonly movieService: MovieService,
-    private readonly movieRatingService: MovieRatingService,
+    @Inject(MovieRecommenderManager) private readonly recommenderManager: MovieRecommenderManager,
+    @Inject(MovieService) private readonly movieService: MovieService,
+    @Inject(MovieRatingService) private readonly movieRatingService: MovieRatingService,
   ) {}
+
+  async seedModel() {
+    if (await this.modelExists()) {
+      console.log('Model already exists');
+      return;
+    }
+
+    await this.recommenderManager.init();
+    await this.recommenderManager.train();
+    await this.recommenderManager.saveModel();
+  }
 
   async modelExists(): Promise<boolean> {
     return this.recommenderManager.modelExists();
@@ -28,7 +39,7 @@ export class RecommenderService {
       .filter(m => m.id !== targetMovie.id)
       .map(movie => ({
         ...movie,
-        similarity: this.calculateGenreSimilarity(targetMovie.genres, movie.genres)
+        similarity: this.calculateGenreSimilarity(targetMovie.genre_ids, movie.genre_ids)
       }))
       .sort((a, b) => b.similarity - a.similarity)
       .slice(0, limit);
@@ -79,7 +90,7 @@ export class RecommenderService {
     const allMovies = await this.movieService.findAll();
     
     const moviesInGenre = allMovies.movies
-      .filter(movie => movie.genres.includes(parseInt(genreId)))
+      .filter(movie => movie.genre_ids.includes(parseInt(genreId)))
       .slice(0, limit);
 
     return moviesInGenre;
