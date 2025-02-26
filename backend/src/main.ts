@@ -1,10 +1,8 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import dotenv from 'dotenv';
 import { SeedService } from './seed/seed.service';
 import { ValidationPipe } from '@nestjs/common';
-
-dotenv.config();
+import { ConfigService } from './config/config.service';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -23,11 +21,11 @@ async function bootstrap() {
     process.exit(1);
   }
 
-  const PORT = parseInt(process.env.PORT || '3000');
-  const HOST = process.env.HOST || '0.0.0.0';
+  const configService = app.get(ConfigService);
+  const { port, host } = configService.config.server;
   
-  await app.listen(PORT, HOST);
-  console.log(`Server running on port ${PORT}`);
+  await app.listen(port, host);
+  console.log(`Server running on port ${port}`);
 }
 
 bootstrap();

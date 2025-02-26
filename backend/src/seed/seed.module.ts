@@ -1,5 +1,4 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { User, UserSchema } from '../user/user.schema';
 import { Genre, GenreSchema } from '../genre/genre.schema';
@@ -13,14 +12,11 @@ import { SeedService } from './seed.service';
 import { DatabaseModule } from '../database/database.module';
 import { RecommenderService } from '../recommender/recommender.service';
 import { TmdbService } from './tmdb.service';
+import { ConfigModule } from '../config/config.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      isGlobal: true,
-      envFilePath: '../.env',
-      cache: false,
-    }),
+    ConfigModule,
     DatabaseModule,
     MongooseModule.forFeature([
       { name: User.name, schema: UserSchema },
