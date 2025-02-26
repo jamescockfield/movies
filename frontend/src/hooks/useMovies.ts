@@ -1,10 +1,10 @@
 import { useQuery } from '@tanstack/react-query';
-import { fetchTasks } from '@/services/api/tasks';
+import { fetchMovies } from '@/services/api/movies';
 
-export function useTasks() {
+export function useMovies() {
   return useQuery({
-    queryKey: ['tasks'],
-    queryFn: fetchTasks,
+    queryKey: ['movies'],
+    queryFn: fetchMovies,
     staleTime: 5 * 60 * 1000, // Consider data stale after 5 minutes
   });
 }

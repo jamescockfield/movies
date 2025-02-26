@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { login } from '@/services/api/login';
+import { authService } from '@/services/api/AuthService';
 
 export default function LoginForm() {
   const [username, setUsername] = useState('');
@@ -13,7 +13,7 @@ export default function LoginForm() {
     e.preventDefault();
     
     try {
-      await login({ username, password });
+      await authService.login({ username, password });
       router.push('/');
     } catch (error) {
       console.error('Login failed:', error);

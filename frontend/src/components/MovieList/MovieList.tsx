@@ -10,41 +10,41 @@ import {
   Box,
   CircularProgress
 } from '@mui/material';
-import { useTasks } from '@/hooks/useTasks';
+import { useMovies } from '@/hooks/useMovies';
   
-interface Task {
+interface Movie {
   id: number;
   title: string;
-  status: string;
-  dueDate: string;
+  description: string;
+  genre: string;
 }
 
-export default function TaskList() {
-  const { data: tasks, isLoading, error } = useTasks();
+export default function MovieList() {
+  const { data: movies, isLoading, error } = useMovies();
 
   if (isLoading) {
     return <CircularProgress />;
   }
 
   if (error) {
-    return <Typography color="error">Failed to load tasks</Typography>;
+    return <Typography color="error">Failed to load movies</Typography>;
   }
 
   return (
     <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 2 }}>
       <Typography variant="h4" gutterBottom>
-        My Tasks
+        My Movies
       </Typography>
       <List>
-        {tasks?.map((task: Task) => (
-          <ListItem key={task.id}>
+        {movies?.map((movie: Movie) => (
+          <ListItem key={movie.id}>
               <Card sx={{ width: '100%', mb: 1 }}>
                 <CardContent>
-                  <Typography variant="h6">{task.title}</Typography>
+                  <Typography variant="h6">{movie.title}</Typography>
                   <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                    <Chip label={task.status} color="primary" />
+                    <Chip label={movie.genre} color="primary" />
                     <Typography variant="body2" color="text.secondary">
-                      Due: {task.dueDate}
+                      {movie.description}
                     </Typography>
                   </Box>
                 </CardContent>
