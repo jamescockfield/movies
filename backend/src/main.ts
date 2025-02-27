@@ -3,15 +3,18 @@ import { AppModule } from './app.module';
 import { SeedService } from './seed/seed.service';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from './config/config.service';
+import { JwtAuthGuard } from './auth/jwt/jwt-auth.guard';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.enableCors();
 
+  app.useGlobalGuards(new JwtAuthGuard());
+
   app.useGlobalPipes(new ValidationPipe({
-    whitelist: true, // strips non-whitelisted properties
-    transform: true, // enables automatic transformation
-    forbidNonWhitelisted: true, // throws error if non-whitelisted properties are present
+    whitelist: true,
+    transform: true,
+    forbidNonWhitelisted: true,
   }));
 
   console.log('Checking if database is seeded...');

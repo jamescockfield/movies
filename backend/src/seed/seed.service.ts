@@ -1,20 +1,20 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { UsersSeederService } from './users.service';
-import { GenresSeederService } from './genres.service';
-import { MoviesSeederService } from './movies.service';
-import { MovieRatingsSeederService } from './movie-ratings.service';
+import { UsersSeederService } from './users-seeder.service';
+import { GenresSeederService } from './genres-seeder.service';
+import { MoviesSeederService } from './movies-seeder.service';
+import { MovieRatingsSeederService } from './movie-ratings-seeder.service';
 import { RecommenderService } from '../recommender/recommender.service';
 
 @Injectable()
 export class SeedService {
   constructor(
-    @Inject(UsersSeederService) private readonly usersSeeder: UsersSeederService,
-    @Inject(GenresSeederService) private readonly genresSeeder: GenresSeederService,
-    @Inject(MoviesSeederService) private readonly moviesSeeder: MoviesSeederService,
-    @Inject(MovieRatingsSeederService) private readonly movieRatingsSeeder: MovieRatingsSeederService,
-    @Inject(RecommenderService) private readonly recommender: RecommenderService,
+    private readonly usersSeeder: UsersSeederService,
+    private readonly genresSeeder: GenresSeederService,
+    private readonly moviesSeeder: MoviesSeederService,
+    private readonly movieRatingsSeeder: MovieRatingsSeederService,
+    private readonly recommender: RecommenderService,
     @InjectModel('Genre') private readonly genreModel: Model<any>,
     @InjectModel('Movie') private readonly movieModel: Model<any>,
     @InjectModel('User') private readonly userModel: Model<any>,

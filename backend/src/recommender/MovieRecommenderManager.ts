@@ -1,6 +1,6 @@
 import fs from 'fs';
 import path from 'path';
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { MovieRating } from '../movie-rating/movie-rating.schema';
 import { MovieRecommender } from './MovieRecommender';
 import { Movie } from '../movie/movie.schema';
@@ -17,9 +17,9 @@ class MovieRecommenderManager {
     recommender?: MovieRecommender;
 
     constructor(
-      @Inject(UserService) private readonly userService: UserService,
-      @Inject(MovieService) private readonly movieService: MovieService,
-      @Inject(MovieRatingService) private readonly movieRatingService: MovieRatingService,
+      private readonly userService: UserService,
+      private readonly movieService: MovieService,
+      private readonly movieRatingService: MovieRatingService,
     ) {}
 
     async init() {

@@ -13,7 +13,7 @@ export class MoviesSeederService {
   constructor(
     @InjectModel(Movie.name) private readonly movieModel: Model<Movie>,
     @InjectModel(Genre.name) private readonly genreModel: Model<Genre>,
-    @Inject(TmdbService) private readonly tmdb: TmdbService,
+    private readonly tmdb: TmdbService,
   ) {}
 
   async generate(): Promise<void> {

@@ -1,11 +1,9 @@
-import { Inject } from '@nestjs/common';
 import { Controller, Get, Query, Param, UseGuards } from '@nestjs/common';
 import { RecommenderService } from './recommender.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('recommender')
 export class RecommenderController {
-  constructor(@Inject(RecommenderService) private readonly recommenderService: RecommenderService) {}
+  constructor(private readonly recommenderService: RecommenderService) {}
 
   @Get('similar/:movieId')
   async getSimilarMovies(
@@ -15,7 +13,6 @@ export class RecommenderController {
     return this.recommenderService.getSimilarMovies(movieId, limit);
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('personalized')
   async getPersonalizedRecommendations(
     @Query('limit') limit: number = 10

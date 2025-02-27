@@ -1,4 +1,4 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { MovieRecommenderManager } from './MovieRecommenderManager';
 import { MovieService } from '../movie/movie.service';
 import { MovieRatingService } from '../movie-rating/movie-rating.service';
@@ -6,9 +6,9 @@ import { MovieRatingService } from '../movie-rating/movie-rating.service';
 @Injectable()
 export class RecommenderService {
   constructor(
-    @Inject(MovieRecommenderManager) private readonly recommenderManager: MovieRecommenderManager,
-    @Inject(MovieService) private readonly movieService: MovieService,
-    @Inject(MovieRatingService) private readonly movieRatingService: MovieRatingService,
+    private readonly recommenderManager: MovieRecommenderManager,
+    private readonly movieService: MovieService,
+    private readonly movieRatingService: MovieRatingService,
   ) {}
 
   async seedModel() {

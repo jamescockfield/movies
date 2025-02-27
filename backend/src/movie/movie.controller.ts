@@ -1,9 +1,7 @@
 import { Controller, Get, Param, Query, UseGuards, ParseIntPipe } from '@nestjs/common';
 import { MovieService } from './movie.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @Controller('movies')
-@UseGuards(JwtAuthGuard)
 export class MovieController {
   constructor(private readonly movieService: MovieService) {}
 

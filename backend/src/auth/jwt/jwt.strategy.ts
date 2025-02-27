@@ -5,7 +5,9 @@ import { ConfigService } from '../../config/config.service';
 
 @Injectable()
 export class JwtStrategy extends PassportStrategy(Strategy) {
-  constructor(@Inject(ConfigService) configService: ConfigService) {
+  constructor(configService: ConfigService) {
+    console.log('JwtStrategy constructor called');
+    console.log('configService:', configService);
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
       ignoreExpiration: false,

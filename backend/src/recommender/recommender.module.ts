@@ -1,4 +1,3 @@
-import { Inject } from '@nestjs/common';
 import { Module, OnModuleInit } from '@nestjs/common';
 import { MovieRecommenderManager } from './MovieRecommenderManager';
 import { MovieModule } from '../movie/movie.module';
@@ -14,9 +13,10 @@ import { MovieRatingModule } from '../movie-rating/movie-rating.module';
   exports: [MovieRecommenderManager, RecommenderService],
 })
 export class RecommenderModule implements OnModuleInit {
-  constructor(@Inject(MovieRecommenderManager) private recommenderManager: MovieRecommenderManager) {}
+  constructor(private recommenderManager: MovieRecommenderManager) {}
 
   async onModuleInit() {
+    return; // TODO: re-enable. Only one of this method or the manual recommenderManager.init() might not be necessary
     console.log('Loading recommender model...');
     await this.recommenderManager.init();
     if (this.recommenderManager.modelExists()) {

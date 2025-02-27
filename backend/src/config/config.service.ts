@@ -6,6 +6,7 @@ export class ConfigService {
   readonly config: Config;
 
   constructor() {
+    console.log('ConfigService constructor called');
     this.config = configSchema.parse({
       database: {
         uri: process.env.MONGODB_URI,

@@ -12,11 +12,11 @@ import { SeedModule } from './seed/seed.module';
   imports: [
     ConfigModule,
     DatabaseModule,
-    MovieModule,
-    UserModule,
-    RecommenderModule,
-    GenreModule,
     AuthModule,
+    UserModule,
+    GenreModule,
+    MovieModule,
+    RecommenderModule,
     SeedModule,
   ],
 })
