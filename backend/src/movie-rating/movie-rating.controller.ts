@@ -1,9 +1,9 @@
-import { Controller, Post, Get, Body, Param, UseGuards, Request } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, UseGuards, Request, Inject } from '@nestjs/common';
 import { MovieRatingService } from './movie-rating.service';
 
 @Controller('movie-ratings')
 export class MovieRatingController {
-  constructor(private readonly movieRatingService: MovieRatingService) {}
+  constructor(@Inject(MovieRatingService) private readonly movieRatingService: MovieRatingService) {}
 
   @Post(':movieId')
   async rateMovie(

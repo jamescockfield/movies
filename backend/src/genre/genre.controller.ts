@@ -1,9 +1,9 @@
-import { Controller, Get, Param, NotFoundException } from '@nestjs/common';
+import { Controller, Get, Param, NotFoundException, Inject } from '@nestjs/common';
 import { GenreService } from './genre.service';
 
 @Controller('genres')
 export class GenreController {
-  constructor(private readonly genreService: GenreService) {}
+  constructor(@Inject(GenreService) private readonly genreService: GenreService) {}
 
   @Get()
   async findAll() {

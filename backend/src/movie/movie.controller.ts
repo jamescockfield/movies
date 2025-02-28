@@ -1,9 +1,9 @@
-import { Controller, Get, Param, Query, UseGuards, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Param, Query, Inject, ParseIntPipe } from '@nestjs/common';
 import { MovieService } from './movie.service';
 
 @Controller('movies')
 export class MovieController {
-  constructor(private readonly movieService: MovieService) {}
+  constructor(@Inject(MovieService) private readonly movieService: MovieService) {}
 
   @Get()
   async findAll(

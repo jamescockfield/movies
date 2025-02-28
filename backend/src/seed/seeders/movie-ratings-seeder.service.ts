@@ -35,7 +35,12 @@ export class MovieRatingsSeederService {
     for (const user of users) {
       console.log(`Generating ratings for user ${user.id}`);
       
-      moviesByGenre.find(movies => movies._id === user.genreId)?.movies.forEach(movie => {
+      // const moviesMatchingUserGenre = moviesByGenre.find(movies => movies._id === user.genreId)?.movies;
+
+      // TODO: debug aggregation so we actually have ratings for all genres
+      const moviesMatchingUserGenre = moviesByGenre[0].movies;
+      
+      moviesMatchingUserGenre.forEach(movie => {
         movieRatings.push({
           userId: user.id,
           movieId: movie.sequentialId,
