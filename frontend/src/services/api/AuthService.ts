@@ -10,6 +10,12 @@ interface LoginCredentials {
   password: string;
 }
 
+export interface UserProfile {
+  id: string;
+  username: string;
+  isAdmin: boolean;
+}
+
 export class AuthService {
   private static instance: AuthService;
 
@@ -48,6 +54,20 @@ export class AuthService {
     const tokens = await response.json();
     this.setTokens(tokens.access, tokens.refresh);
     return tokens;
+  }
+
+  async logout(): Promise<void> {
+    this.clearTokens();
+  }
+
+  async getUserProfile(): Promise<UserProfile> {
+    const response = await this.fetchWithAuth(`${config.apiUrl}/users/profile`);
+    
+    if (!response.ok) {
+      throw new Error('Failed to fetch user profile');
+    }
+    
+    return response.json();
   }
 
   async fetchWithAuth(url: string, options: RequestInit = {}): Promise<Response> {

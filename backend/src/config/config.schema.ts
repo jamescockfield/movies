@@ -6,11 +6,11 @@ export const configSchema = z.object({
   }),
   jwt: z.object({
     secret: z.string().min(16),
-    expiresIn: z.string().default('1d'),
+    expiresIn: z.string()
   }),
   server: z.object({
-    port: z.coerce.number().default(3000),
-    host: z.string().default('0.0.0.0'),
+    port: z.coerce.number(),
+    host: z.string()
   }),
   tmdb: z.object({
     apiKey: z.string(),

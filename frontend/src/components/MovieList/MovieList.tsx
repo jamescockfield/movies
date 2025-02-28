@@ -4,54 +4,63 @@ import {
   Card, 
   CardContent, 
   Typography, 
-  List, 
-  ListItem, 
   Chip,
   Box,
-  CircularProgress
+  Grid
 } from '@mui/material';
-import { useMovies } from '@/hooks/useMovies';
-  
+
 interface Movie {
   id: number;
   title: string;
   description: string;
   genre: string;
+  poster_path: string;
 }
 
-export default function MovieList() {
-  const { data: movies, isLoading, error } = useMovies();
+interface MovieListProps {
+  genreName: string;
+  movies: Movie[];
+}
 
-  if (isLoading) {
-    return <CircularProgress />;
-  }
-
-  if (error) {
-    return <Typography color="error">Failed to load movies</Typography>;
-  }
-
+export default function MovieList({ genreName, movies }: MovieListProps) {
   return (
-    <Box sx={{ maxWidth: 800, margin: '0 auto', padding: 2 }}>
-      <Typography variant="h4" gutterBottom>
-        My Movies
-      </Typography>
-      <List>
-        {movies?.map((movie: Movie) => (
-          <ListItem key={movie.id}>
-              <Card sx={{ width: '100%', mb: 1 }}>
-                <CardContent>
-                  <Typography variant="h6">{movie.title}</Typography>
-                  <Box sx={{ display: 'flex', justifyContent: 'space-between', mt: 2 }}>
-                    <Chip label={movie.genre} color="primary" />
-                    <Typography variant="body2" color="text.secondary">
-                      {movie.description}
-                    </Typography>
-                  </Box>
-                </CardContent>
-              </Card>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
+    <Grid container spacing={2}>
+      {movies.map((movie: Movie) => (
+        <Grid item key={movie.id} xs={12} sm={6} md={3} lg={1.5}>
+          <Card sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+            <CardContent>
+              <Typography variant="h6" noWrap>{movie.title}</Typography>
+              <Chip 
+                label={genreName} 
+                color="primary" 
+                size="small" 
+                sx={{ mt: 1, mb: 1 }} 
+              />
+              <Typography 
+                variant="body2" 
+                color="text.secondary"
+                sx={{
+                  overflow: 'hidden',
+                  textOverflow: 'ellipsis',
+                  display: '-webkit-box',
+                  WebkitLineClamp: 2,
+                  WebkitBoxOrient: 'vertical',
+                  mb: 1
+                }}
+              >
+                {movie.description}
+              </Typography>
+              <Box sx={{ mt: 'auto', textAlign: 'center' }}>
+                <img 
+                  src={`https://image.tmdb.org/t/p/w200${movie.poster_path}`} 
+                  alt={movie.title}
+                  style={{ maxWidth: '100%', height: 'auto' }}
+                />
+              </Box>
+            </CardContent>
+          </Card>
+        </Grid>
+      ))}
+    </Grid>
   );
 }

@@ -4,10 +4,14 @@ import { MongooseModule } from '@nestjs/mongoose';
 import { Movie, MovieSchema } from './movie.schema';
 import { MovieService } from './movie.service';
 import { MovieController } from './movie.controller';
+import { Genre, GenreSchema } from '../genre/genre.schema';
 
 @Module({
   imports: [
-    MongooseModule.forFeature([{ name: Movie.name, schema: MovieSchema }])
+    MongooseModule.forFeature([
+      { name: Movie.name, schema: MovieSchema },
+      { name: Genre.name, schema: GenreSchema },
+    ])
   ],
   providers: [MovieService],
   controllers: [MovieController],

@@ -15,8 +15,8 @@ export class ConfigService {
         expiresIn: process.env.JWT_EXPIRES_IN || '1d',
       },
       server: {
-        port: Number(process.env.PORT) || 3000,
-        host: process.env.HOST || '0.0.0.0',
+        port: Number(process.env.SERVER_PORT) || 8000,
+        host: process.env.SERVER_HOST || '0.0.0.0',
       },
       tmdb: {
         apiKey: process.env.TMDB_API_KEY,
