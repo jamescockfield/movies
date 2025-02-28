@@ -24,7 +24,7 @@ export class MoviesSeederService {
 
     const genres = await this.genreModel.find().lean().exec();
     const movies: Partial<Movie>[] = [];
-    let sequentialId = 1;
+    let sequentialId = 1; // TODO: we may not need sequentialId anymore
 
     for (const genre of genres) {
       console.log(`Downloading movies for genre: ${genre.name}`);

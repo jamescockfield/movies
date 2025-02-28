@@ -51,6 +51,9 @@ export class Movie extends Document {
 
   @Prop({ type: Number })
   declare sequentialId: number;
+
+  @Prop({ type: Number })
+  declare tmdb_id: number;
 }
 
 export const MovieSchema = SchemaFactory.createForClass(Movie);

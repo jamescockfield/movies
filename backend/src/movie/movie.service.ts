@@ -1,6 +1,6 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
-import { Model } from 'mongoose';
+import { Model, Types } from 'mongoose';
 import { Movie } from './movie.schema';
 import { Genre } from '../genre/genre.schema';
 
@@ -82,7 +82,7 @@ export class MovieService {
   }
 
   async findOne(movieId: number) {
-    return this.movieModel.findOne({ id: movieId });
+    return this.movieModel.findOne({ _id: new Types.ObjectId(movieId) });
   }
 
   /**
@@ -127,7 +127,7 @@ export class MovieService {
           _id: "$genreId",
           movies: { 
             $push: {
-              id: "$id",
+              id: "$_id",
               title: "$title",
               overview: "$overview",
               poster_path: "$poster_path",

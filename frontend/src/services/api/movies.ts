@@ -22,3 +22,13 @@ export const fetchMovies = async (genreIds?: number[], moviesPerGenre?: number) 
   }
   return response.json();
 }
+
+export const fetchMovieById = async (movieId: number) => {
+  const url = `${config.apiUrl}/movies/${movieId}`;
+  
+  const response = await authService.fetchWithAuth(url);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+}
