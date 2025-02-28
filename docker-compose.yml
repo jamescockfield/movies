@@ -28,6 +28,7 @@ services:
 
   mongo:
     image: mongo:latest
+    command: --nounixsocket
     ports:
       - "27017:27017"
     volumes:

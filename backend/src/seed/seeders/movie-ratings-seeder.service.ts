@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from '../user/user.schema';
-import { Genre } from '../genre/genre.schema';
-import { Movie } from '../movie/movie.schema';
-import { MovieRating } from '../movie-rating/movie-rating.schema';
+import { User } from '../../user/user.schema';
+import { Genre } from '../../genre/genre.schema';
+import { Movie } from '../../movie/movie.schema';
+import { MovieRating } from '../../movie-rating/movie-rating.schema';
 
 interface MoviesByGenre {
   _id: number;

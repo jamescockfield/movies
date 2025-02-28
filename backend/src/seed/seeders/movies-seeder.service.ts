@@ -1,9 +1,9 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Movie } from '../movie/movie.schema';
-import { Genre } from '../genre/genre.schema';
-import { TmdbService } from './tmdb.service';
+import { Movie } from '../../movie/movie.schema';
+import { Genre } from '../../genre/genre.schema';
+import { TmdbService } from '../tmdb.service';
 
 @Injectable()
 export class MoviesSeederService {

@@ -3,11 +3,12 @@ import { SeedModule } from './seed/seed.module';
 import { SeedService } from './seed/seed.service';
 
 async function bootstrap() {
-  const app = await NestFactory.create(SeedModule, {
-    logger: ['error', 'warn', 'log'],
-  });
+  console.log('Starting seed script...');
+  const app = await NestFactory.create(SeedModule);
+  console.log('App created successfully');
 
   try {
+    console.log('Starting to seed...');
     const seedService = app.get(SeedService);
     await seedService.seed();
     console.log('Seeding completed successfully');

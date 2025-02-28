@@ -7,26 +7,32 @@ import { ConfigService } from '../config/config.service';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { JwtStrategy } from './jwt/jwt.strategy';
+import { JwtAuthGuard } from './jwt/jwt-auth.guard';
+import { APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
     PassportModule,
     ConfigModule,
+    UserModule,
     JwtModule.registerAsync({
       imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => {
-        console.log('JwtModule useFactory called');
-        console.log('configService:', configService);
-        return {
-          secret: configService.config.jwt.secret,
-          signOptions: { expiresIn: configService.config.jwt.expiresIn },
-        };
-      },
+      useFactory: async (configService: ConfigService) => ({
+        secret: configService.config.jwt.secret,
+        signOptions: { expiresIn: configService.config.jwt.expiresIn },
+      }),
       inject: [ConfigService],
     }),
-    UserModule,
   ],
-  providers: [AuthService, JwtStrategy, JwtService],
+  providers: [
+    AuthService,
+    JwtStrategy,
+    JwtService,
+    {
+      provide: APP_GUARD,
+      useClass: JwtAuthGuard,
+    },
+  ],
   controllers: [AuthController],
   exports: [AuthService],
 })

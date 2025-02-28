@@ -4,15 +4,15 @@ import { User, UserSchema } from '../user/user.schema';
 import { Genre, GenreSchema } from '../genre/genre.schema';
 import { Movie, MovieSchema } from '../movie/movie.schema';
 import { MovieRating, MovieRatingSchema } from '../movie-rating/movie-rating.schema';
-import { MovieRatingsSeederService } from './movie-ratings-seeder.service';
-import { UsersSeederService } from './users-seeder.service';
-import { GenresSeederService } from './genres-seeder.service';
-import { MoviesSeederService } from './movies-seeder.service';
 import { SeedService } from './seed.service';
 import { DatabaseModule } from '../database/database.module';
 import { TmdbService } from './tmdb.service';
 import { ConfigModule } from '../config/config.module';
 import { RecommenderModule } from '../recommender/recommender.module';
+import { MovieRatingsSeederService } from './seeders/movie-ratings-seeder.service';
+import { UsersSeederService } from './seeders/users-seeder.service';
+import { GenresSeederService } from './seeders/genres-seeder.service';
+import { MoviesSeederService } from './seeders/movies-seeder.service';
 
 @Module({
   imports: [

@@ -1,17 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UserService } from '../user/user.service';
+import { User } from '../user/user.schema';
 
 @Injectable()
 export class AuthService {
   constructor(
-    private readonly userService: UserService,
-    private readonly jwtService: JwtService,
-  ) {
-    console.log('AuthService constructor called');
-    console.log('userService:', userService);
-    console.log('jwtService:', jwtService);
-  }
+    @Inject(UserService) private readonly userService: UserService,
+    @Inject(JwtService) private readonly jwtService: JwtService,
+  ) {}
 
   async validateUser(username: string, password: string): Promise<any> {
     const user = await this.userService.validateUser(username, password);
@@ -22,7 +19,7 @@ export class AuthService {
     return null;
   }
 
-  async login(user: any) {
+  async login(user: User) {
     const payload = { username: user.username, sub: user.id };
     return {
       access: this.jwtService.sign(payload),
@@ -40,5 +37,10 @@ export class AuthService {
     } catch (error) {
       throw new Error('Invalid refresh token');
     }
+  }
+
+  async register(username: string, password: string): Promise<User> {
+    const newUser = await this.userService.create(username, password);
+    return newUser;
   }
 } 

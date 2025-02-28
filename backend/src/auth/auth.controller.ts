@@ -1,12 +1,9 @@
-import { Controller, Post, Body, UnauthorizedException } from '@nestjs/common';
+import { Controller, Post, Body, UnauthorizedException, Inject } from '@nestjs/common';
 import { AuthService } from './auth.service';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService) {
-    console.log('AuthController constructor called');
-    console.log('authService:', authService);
-  }
+  constructor(@Inject(AuthService) private readonly authService: AuthService) {}
 
   @Post('login')
   async login(@Body() body: { username: string; password: string }) {
@@ -15,6 +12,12 @@ export class AuthController {
       throw new UnauthorizedException('Invalid credentials');
     }
     return this.authService.login(user);
+  }
+
+  @Post('register')
+  async register(@Body() body: { username: string; password: string }) {
+    const newUser = await this.authService.register(body.username, body.password);
+    return newUser;
   }
 
   @Post('refresh')

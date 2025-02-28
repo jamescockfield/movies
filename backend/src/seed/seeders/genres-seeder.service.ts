@@ -1,15 +1,15 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Genre } from '../genre/genre.schema';
-import { genres } from '../genre/genres';
-import { TmdbService } from './tmdb.service';
+import { Genre } from '../../genre/genre.schema';
+import { genres } from '../../genre/genres';
+import { TmdbService } from '../tmdb.service';
 
 @Injectable()
 export class GenresSeederService {
   constructor(
     @InjectModel(Genre.name) private readonly genreModel: Model<Genre>,
-    private readonly tmdb: TmdbService,
+    @Inject(TmdbService) private readonly tmdb: TmdbService,
   ) {}
 
   async generate(): Promise<void> {

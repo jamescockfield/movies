@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { User } from '../user/user.schema';
-import { Genre } from '../genre/genre.schema';
+import { User } from '../../user/user.schema';
+import { Genre } from '../../genre/genre.schema';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UsersSeederService {
@@ -18,12 +19,12 @@ export class UsersSeederService {
     }
 
     const genres = await this.genreModel.find().lean().exec();
-    const users: Partial<User>[] = genres.map((genre, index) => ({
+    const users: Partial<User>[] = await Promise.all(genres.map(async (genre, index) => ({
       id: index + 1,
       username: `User ${index + 1}`,
-      password: 'password',
+      password: await bcrypt.hash('password', 10),
       genreId: genre.id,
-    }));
+    })));
 
     const result = await this.userModel.insertMany(users, { ordered: false });
 
