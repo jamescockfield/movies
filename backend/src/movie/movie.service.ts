@@ -127,7 +127,7 @@ export class MovieService {
           _id: "$genreId",
           movies: { 
             $push: {
-              id: "$_id",
+              _id: "$_id",
               title: "$title",
               overview: "$overview",
               poster_path: "$poster_path",
@@ -154,20 +154,7 @@ export class MovieService {
     
     // Ensure all requested genres have entries in the result
     allGenres.forEach(genre => {
-      const genreName = genre.name;
-      const genreId = genre.id;
-      
-      // Get movies for this genre from the aggregation results
-      const movies = genreMoviesMap.get(genreId) || [];
-      
-      // Map the movies to the expected format
-      moviesByGenre[genreName] = movies.map((movie: any) => ({
-        id: movie.id,
-        title: movie.title,
-        description: movie.overview,
-        genre: genreName,
-        poster_path: movie.poster_path
-      }));
+      moviesByGenre[genre.name] = genreMoviesMap.get(genre.id) || [];
     });
     
     return { moviesByGenre };

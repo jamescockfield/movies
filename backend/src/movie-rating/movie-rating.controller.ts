@@ -1,4 +1,4 @@
-import { Controller, Post, Get, Body, Param, UseGuards, Request, Inject } from '@nestjs/common';
+import { Controller, Post, Get, Body, Param, Request, Inject } from '@nestjs/common';
 import { MovieRatingService } from './movie-rating.service';
 
 @Controller('movie-ratings')
@@ -13,7 +13,7 @@ export class MovieRatingController {
   ) {
     return this.movieRatingService.create(
       req.user.id,
-      parseInt(movieId),
+      movieId,
       rating,
     );
   }
@@ -23,15 +23,20 @@ export class MovieRatingController {
     return this.movieRatingService.findByUser(req.user.id);
   }
 
+  @Get('user/:userId')
+  async getUserRatingsByUserId(@Param('userId') userId: string) {
+    return this.movieRatingService.findByUser(userId);
+  }
+
   @Get('movie/:movieId')
   async getMovieRatings(@Param('movieId') movieId: string) {
-    return this.movieRatingService.findByMovie(parseInt(movieId));
+    return this.movieRatingService.findByMovie(movieId);
   }
 
   @Get('movie/:movieId/average')
   async getMovieAverageRating(@Param('movieId') movieId: string) {
     return {
-      averageRating: await this.movieRatingService.getAverageRating(parseInt(movieId)),
+      averageRating: await this.movieRatingService.getAverageRating(movieId),
     };
   }
 }

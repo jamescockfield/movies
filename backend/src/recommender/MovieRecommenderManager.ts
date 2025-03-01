@@ -49,7 +49,7 @@ class MovieRecommenderManager {
 
         for (const rating of ratings) {
             userIds.push(rating.userId.id);
-            movieIds.push(rating.movieId);
+            movieIds.push(rating.movieId.id);
             ratingValues.push(rating.rating / 5.0); // Normalize ratings
         }
 

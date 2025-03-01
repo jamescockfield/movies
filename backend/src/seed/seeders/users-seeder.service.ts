@@ -20,7 +20,7 @@ export class UsersSeederService {
 
     const genres = await this.genreModel.find().lean().exec();
     const users: Partial<User>[] = await Promise.all(genres.map(async (genre, index) => ({
-      id: index + 1,
+      id: index + 1, // TODO: remove this
       username: `User ${index + 1}`,
       password: await bcrypt.hash('password', 10),
       genreId: genre.id,

@@ -45,3 +45,13 @@ export const getUserRatings = async (): Promise<MovieRating[]> => {
   }
   return response.json();
 }; 
+
+export const getUserRatingsByUserId = async (userId: string): Promise<MovieRating[]> => {
+  const url = `${config.apiUrl}/movie-ratings/user/${userId}`;
+  
+  const response = await authService.fetchWithAuth(url);
+  if (!response.ok) {
+    throw new Error(`HTTP error! status: ${response.status}`);
+  }
+  return response.json();
+};

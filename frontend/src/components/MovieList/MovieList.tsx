@@ -27,7 +27,7 @@ export default function MovieList({ genreName, movies }: MovieListProps) {
   return (
     <Grid container spacing={2}>
       {movies.map((movie: Movie) => (
-        <Grid item key={movie.id} xs={12} sm={6} md={3} lg={1.5}>
+        <Grid item key={movie._id} xs={12} sm={6} md={3} lg={1.5}>
           <Card 
             sx={{ 
               height: '100%', 
@@ -41,7 +41,7 @@ export default function MovieList({ genreName, movies }: MovieListProps) {
             }}
           >
             <CardActionArea 
-              onClick={() => handleMovieClick(movie.id)}
+              onClick={() => handleMovieClick(movie._id)}
               sx={{ height: '100%', display: 'flex', flexDirection: 'column', alignItems: 'stretch' }}
             >
               <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column' }}>

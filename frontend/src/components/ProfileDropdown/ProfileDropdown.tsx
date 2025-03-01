@@ -3,12 +3,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService } from '@/services/api/AuthService';
+import { useUser } from '@/hooks/useUser';
 
 export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
-  const [username, setUsername] = useState<string | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const { user } = useUser();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -23,28 +24,14 @@ export default function ProfileDropdown() {
     };
   }, []);
 
-  useEffect(() => {
-    // Fetch the username for the profile link
-    const fetchUsername = async () => {
-      try {
-        const profile = await authService.getUserProfile();
-        setUsername(profile.username);
-      } catch (error) {
-        console.error('Failed to fetch username', error);
-      }
-    };
-
-    fetchUsername();
-  }, []);
-
   const handleLogout = async () => {
     await authService.logout();
     router.push('/login');
   };
 
   const handleViewProfile = () => {
-    if (username) {
-      router.push(`/profile/${username}`);
+    if (user) {
+      router.push(`/profile/${user._id}`);
       setIsOpen(false);
     }
   };

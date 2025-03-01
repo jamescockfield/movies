@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchMovieRatings, fetchMovieAverageRating, rateMovie } from '@/services/api/ratings';
+import { fetchMovieRatings, fetchMovieAverageRating, rateMovie, getUserRatingsByUserId } from '@/services/api/ratings';
 import { MovieRating } from '@/types/types';
 
 interface UseMovieRatingsResult {
@@ -8,6 +8,12 @@ interface UseMovieRatingsResult {
   isLoading: boolean;
   error: Error | null;
   submitRating: (rating: number) => Promise<void>;
+}
+
+interface UseUserRatingsResult {
+  ratings: MovieRating[];
+  isLoading: boolean;
+  error: Error | null;
 }
 
 export const useMovieRatings = (movieId: string): UseMovieRatingsResult => {
@@ -53,3 +59,31 @@ export const useMovieRatings = (movieId: string): UseMovieRatingsResult => {
 
   return { ratings, averageRating, isLoading, error, submitRating };
 }; 
+
+export const useUserRatings = (userId: string): UseUserRatingsResult => {
+  const [ratings, setRatings] = useState<MovieRating[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<Error | null>(null);
+
+  const fetchData = async () => {
+    try {
+      setIsLoading(true);
+      const ratingsData = await getUserRatingsByUserId(userId);
+      setRatings(ratingsData);
+      setIsLoading(false);
+    } catch (err) {
+      console.error('Error fetching user ratings:', err);
+      setError(err instanceof Error ? err : new Error('An unknown error occurred'));
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (userId) {
+      fetchData();
+    }
+  }, [userId]);
+  
+  return { ratings, isLoading, error };
+};
+

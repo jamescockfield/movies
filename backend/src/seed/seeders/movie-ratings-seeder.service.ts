@@ -29,27 +29,30 @@ export class MovieRatingsSeederService {
     const moviesByGenre: MoviesByGenre[] = await this.getMoviesAggregatedByGenre();
     const movieRatings: Partial<MovieRating>[] = [];
 
-    // const users = await this.userModel.find().lean().exec();
     const users = await this.userModel.find();
 
     for (const user of users) {
       console.log(`Generating ratings for user ${user.id}`);
       
-      // const moviesMatchingUserGenre = moviesByGenre.find(movies => movies._id === user.genreId)?.movies;
-
-      // TODO: debug aggregation so we actually have ratings for all genres
-      const moviesMatchingUserGenre = moviesByGenre[0].movies;
+      // Find movies matching this user's preferred genre
+      const moviesMatchingUserGenre = moviesByGenre.find(group => group._id === user.genreId)?.movies || [];
+      
+      // If no movies found for this user's genre, log a warning
+      if (moviesMatchingUserGenre.length === 0) {
+        console.log(`Warning: No movies found for user ${user.id} with genre ${user.genreId}`);
+        continue;
+      }
       
       moviesMatchingUserGenre.forEach(movie => {
         movieRatings.push({
-          userId: user.id,
-          movieId: movie.id,
+          userId: user._id as User,
+          movieId: movie._id as Movie,
           rating: Math.floor(Math.random() * 5) + 1,
         });
       });
     }
 
-    const result = await this.movieRatingModel.insertMany(movieRatings, { ordered: false });
+    const result = await this.movieRatingModel.insertMany(movieRatings);
 
     console.log(`Inserted ${result.length} movie ratings into database`);
   }
@@ -58,16 +61,19 @@ export class MovieRatingsSeederService {
     const genres = await this.genreModel.find();
     const genreIds = genres.map(genre => genre.id);
 
-    // TODO: test aggregation to ensure it still works
-    
     return this.movieModel.aggregate([
       { $match: { genreId: { $in: genreIds } } },
       { $sort: { _id: -1 } },
-      { $limit: 100 },
       {
         $group: {
           _id: '$genreId',
           movies: { $push: '$$ROOT' }
+        }
+      },
+      {
+        $project: {
+          _id: 1,
+          movies: { $slice: ['$movies', 100] }  // Take only the first 100 movies per genre
         }
       }
     ]);

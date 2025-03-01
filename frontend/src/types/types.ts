@@ -1,11 +1,9 @@
 // TODO: consider using swagger on the backend to generate the types and a client library
 
-export interface Movie {
-  id: number;
-  title: string;
-  description: string;
-  genre: string;
-  poster_path: string;
+export interface UserProfile {
+  _id: string;
+  username: string;
+  isAdmin: boolean;
 }
 
 export interface Genre {
@@ -21,12 +19,13 @@ export interface MoviesByGenre {
 }
 
 export interface MovieRating {
-  id: string;
-  movieId: number;
+  _id: string;
+  movieId: Partial<Movie>;
   movieTitle: string;
   rating: number;
   comment?: string;
   createdAt: string;
+  userId: Partial<UserProfile>;
 }
 
 export interface Movie {

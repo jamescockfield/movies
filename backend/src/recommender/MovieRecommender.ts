@@ -52,6 +52,8 @@ class MovieRecommender {
         });
     }
 
+    // TODO: see if we can remove sequential ids and just use mongo Object ids
+
     async train(userIds: number[], movieIds: number[], ratings: number[], epochs = 50) {
         // Map IDs to indices with validation
         const mappedUserIds = userIds.map(id => {

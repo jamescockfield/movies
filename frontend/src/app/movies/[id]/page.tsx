@@ -24,7 +24,8 @@ import {
   List,
   ListItem,
   ListItemAvatar,
-  ListItemText
+  ListItemText,
+  Link
 } from '@mui/material';
 import { fetchGenres } from '@/services/api/genres';
 import { Person as PersonIcon, Star as StarIcon } from '@mui/icons-material';
@@ -223,7 +224,7 @@ export default function MovieDetailsPage() {
         {ratings.length > 0 ? (
           <List>
             {ratings.map((rating: MovieRating) => (
-              <ListItem key={rating.id} alignItems="flex-start" divider>
+              <ListItem key={rating._id} alignItems="flex-start" divider>
                 <ListItemAvatar>
                   <Avatar>
                     <PersonIcon />
@@ -231,11 +232,23 @@ export default function MovieDetailsPage() {
                 </ListItemAvatar>
                 <ListItemText
                   primary={
-                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                      <Rating value={rating.rating} readOnly size="small" />
-                      <Typography variant="body2" sx={{ ml: 1 }}>
-                        {new Date(rating.createdAt).toLocaleDateString()}
-                      </Typography>
+                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                        <Rating value={rating.rating} readOnly size="small" />
+                        <Typography variant="body2" sx={{ ml: 1 }}>
+                          {new Date(rating.createdAt).toLocaleDateString()}
+                        </Typography>
+                      </Box>
+                      <Link 
+                        href={`/profile/${rating.userId._id}`}
+                        sx={{ 
+                          textDecoration: 'none', 
+                          color: 'primary.main',
+                          '&:hover': { textDecoration: 'underline' }
+                        }}
+                      >
+                        {rating.userId.username || 'User'}
+                      </Link>
                     </Box>
                   }
                   secondary={rating.comment || "No comment provided"}

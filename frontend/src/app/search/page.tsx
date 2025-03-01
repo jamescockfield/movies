@@ -76,7 +76,7 @@ export default function SearchPage() {
       
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {movies.map(movie => (
-          <div key={movie.id} className="bg-white rounded-lg shadow-md overflow-hidden">
+          <div key={movie._id} className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="h-48 bg-gray-200 flex items-center justify-center">
               <img 
                 src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 

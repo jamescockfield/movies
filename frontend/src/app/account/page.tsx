@@ -2,7 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { authService, UserProfile } from '@/services/api/AuthService';
+import { UserProfile } from '@/types/types';
+import { getCurrentUserProfile } from '@/services/api/users';
 
 export default function AccountPage() {
   const router = useRouter();
@@ -20,7 +21,7 @@ export default function AccountPage() {
     
     const fetchProfile = async () => {
       try {
-        const userProfile = await authService.getUserProfile();
+        const userProfile = await getCurrentUserProfile();
         setProfile(userProfile);
         setIsLoading(false);
       } catch (err) {
@@ -75,7 +76,7 @@ export default function AccountPage() {
               
               <div className="flex justify-between py-2">
                 <span className="font-medium text-gray-500">User ID:</span>
-                <span className="text-sm text-gray-600">{profile.id}</span>
+                <span className="text-sm text-gray-600">{profile._id}</span>
               </div>
               
               <div className="flex justify-between py-2">

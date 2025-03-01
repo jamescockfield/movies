@@ -11,7 +11,7 @@ export class MovieRatingService {
     private readonly movieService: MovieService,
   ) {}
 
-  async create(userId: string, movieId: number, rating: number): Promise<MovieRating> {
+  async create(userId: string, movieId: string, rating: number): Promise<MovieRating> {
     // Verify movie exists
     await this.movieService.findById(movieId);
 
@@ -29,13 +29,14 @@ export class MovieRatingService {
   async findByUser(userId: string): Promise<MovieRating[]> {
     return this.movieRatingModel
       .find({ userId: new Types.ObjectId(userId) })
+      .populate('movieId')
       .sort({ createdAt: -1 })
       .exec();
   }
 
-  async findByMovie(movieId: number): Promise<MovieRating[]> {
+  async findByMovie(movieId: string): Promise<MovieRating[]> {
     return this.movieRatingModel
-      .find({ movieId })
+      .find({ movieId: new Types.ObjectId(movieId) })
       .populate('userId', 'username')
       .sort({ createdAt: -1 })
       .exec();
@@ -45,9 +46,9 @@ export class MovieRatingService {
     return this.movieRatingModel.find().exec();
   }
 
-  async getAverageRating(movieId: number): Promise<number | null> {
+  async getAverageRating(movieId: string): Promise<number | null> {
     const result = await this.movieRatingModel.aggregate([
-      { $match: { movieId } },
+      { $match: { movieId: new Types.ObjectId(movieId) } },
       { $group: { _id: null, averageRating: { $avg: '$rating' } } }
     ]).exec();
 
