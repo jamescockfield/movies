@@ -2,14 +2,8 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter, useSearchParams } from 'next/navigation';
-
-interface Movie {
-  id: number;
-  title: string;
-  posterPath: string;
-  releaseDate: string;
-  overview: string;
-}
+import { Movie } from '@/types/types';
+import { searchMovies } from '@/services/api/movies';
 
 export default function SearchPage() {
   const router = useRouter();
@@ -34,37 +28,12 @@ export default function SearchPage() {
 
     const fetchSearchResults = async () => {
       try {
-        // This would be replaced with an actual API call
-        // For now, we'll simulate it with a timeout
-        setTimeout(() => {
-          setMovies([
-            {
-              id: 1,
-              title: 'The Shawshank Redemption',
-              posterPath: '/placeholder.jpg',
-              releaseDate: '1994-09-23',
-              overview: 'Two imprisoned men bond over a number of years, finding solace and eventual redemption through acts of common decency.',
-            },
-            {
-              id: 2,
-              title: 'The Godfather',
-              posterPath: '/placeholder.jpg',
-              releaseDate: '1972-03-24',
-              overview: 'The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son.',
-            },
-            {
-              id: 3,
-              title: 'The Dark Knight',
-              posterPath: '/placeholder.jpg',
-              releaseDate: '2008-07-18',
-              overview: 'When the menace known as the Joker wreaks havoc and chaos on the people of Gotham, Batman must accept one of the greatest psychological and physical tests of his ability to fight injustice.',
-            },
-          ].filter(movie => 
-            movie.title.toLowerCase().includes(query.toLowerCase())
-          ));
-          setIsLoading(false);
-        }, 1000);
+        setIsLoading(true);
+        const results = await searchMovies(query);
+        setMovies(results.movies);
+        setIsLoading(false);
       } catch (err) {
+        console.error('Search error:', err);
         setError('Failed to load search results');
         setIsLoading(false);
       }
@@ -109,12 +78,16 @@ export default function SearchPage() {
         {movies.map(movie => (
           <div key={movie.id} className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="h-48 bg-gray-200 flex items-center justify-center">
-              <span className="text-gray-500">Movie Poster</span>
+              <img 
+                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
+                alt={movie.title} 
+                className="w-full h-full object-cover"
+              />
             </div>
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">{movie.title}</h2>
               <p className="text-sm text-gray-500 mb-2">
-                Released: {new Date(movie.releaseDate).toLocaleDateString()}
+                Released: {new Date(movie.release_date).toLocaleDateString()}
               </p>
               <p className="text-gray-700 line-clamp-3">{movie.overview}</p>
               <button 

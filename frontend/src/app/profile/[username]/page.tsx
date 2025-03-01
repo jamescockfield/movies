@@ -3,15 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { authService } from '@/services/api/AuthService';
-
-interface MovieRating {
-  id: string;
-  movieId: number;
-  movieTitle: string;
-  rating: number;
-  comment?: string;
-  createdAt: string;
-}
+import { MovieRating } from '@/types/types';
 
 interface UserPublicProfile {
   username: string;

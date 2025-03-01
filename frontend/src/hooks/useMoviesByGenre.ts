@@ -1,26 +1,8 @@
 import { useState, useEffect } from 'react';
 import { fetchMovies } from '@/services/api/movies';
 import { fetchGenres } from '@/services/api/genres';
+import { Movie, Genre, MoviesByGenre } from '@/types/types';
 
-interface Movie {
-  id: number;
-  title: string;
-  description: string;
-  genre: string;
-  poster_path: string;
-}
-
-interface Genre {
-  id: number;
-  name: string;
-}
-
-interface MoviesByGenre {
-  genres: Genre[];
-  moviesByGenre: Record<string, Movie[]>;
-  isLoading: boolean;
-  error: Error | null;
-}
 
 export const useMoviesByGenre = (moviesPerGenre: number = 8): MoviesByGenre => {
   const [genres, setGenres] = useState<Genre[]>([]);

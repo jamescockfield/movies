@@ -3,6 +3,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useMovie } from '@/hooks/useMovie';
+import { Genre } from '@/types/types';
 import { 
   Box, 
   Typography, 
@@ -15,14 +16,15 @@ import {
   Rating,
   Divider
 } from '@mui/material';
+import { fetchGenres } from '@/services/api/genres';
 
 export default function MovieDetailsPage() {
   const router = useRouter();
   const params = useParams();
-  const movieId = parseInt(params.id as string, 10);
   
-  const { movie, isLoading, error } = useMovie(movieId);
+  const { movie, isLoading, error } = useMovie(params.id as string);
   const [isAuthChecked, setIsAuthChecked] = useState(false);
+  const [genres, setGenres] = useState<Genre[]>([]);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -32,6 +34,19 @@ export default function MovieDetailsPage() {
       setIsAuthChecked(true);
     }
   }, [router]);
+
+  useEffect(() => {
+    const getGenres = async () => {
+      try {
+        const data = await fetchGenres();
+        setGenres(data);
+      } catch (error) {
+        console.error('Error fetching genres:', error);
+      }
+    };
+
+    getGenres();
+  }, []);
 
   if (!isAuthChecked) {
     return null;
@@ -111,7 +126,7 @@ export default function MovieDetailsPage() {
             
             <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
               <Chip 
-                label={movie.genre} 
+                label={genres.find(genre => genre.id === movie.genreId)?.name} 
                 color="primary" 
                 size="small" 
                 sx={{ mr: 1 }} 
@@ -123,11 +138,9 @@ export default function MovieDetailsPage() {
                 </Typography>
               )}
               
-              {movie.runtime && (
-                <Typography variant="body2" color="text.secondary">
-                  {Math.floor(movie.runtime / 60)}h {movie.runtime % 60}m
-                </Typography>
-              )}
+              <Typography variant="body2" color="text.secondary">
+                2h 10m
+              </Typography>
             </Box>
             
             {movie.vote_average && (

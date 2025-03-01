@@ -1,16 +1,6 @@
 import { useState, useEffect } from 'react';
 import { fetchMovieById } from '@/services/api/movies';
-
-interface Movie {
-  id: number;
-  title: string;
-  description: string;
-  genre: string;
-  poster_path: string;
-  release_date?: string;
-  vote_average?: number;
-  runtime?: number;
-}
+import { Movie } from '@/types/types';
 
 interface UseMovieResult {
   movie: Movie | null;
@@ -18,7 +8,7 @@ interface UseMovieResult {
   error: Error | null;
 }
 
-export const useMovie = (movieId: number): UseMovieResult => {
+export const useMovie = (movieId: string): UseMovieResult => {
   const [movie, setMovie] = useState<Movie | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [error, setError] = useState<Error | null>(null);

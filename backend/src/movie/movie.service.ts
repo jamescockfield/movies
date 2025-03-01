@@ -25,8 +25,8 @@ export class MovieService {
     return { movies, total };
   }
 
-  async findById(id: number): Promise<Movie> {
-    const movie = await this.movieModel.findOne({ id }).exec();
+  async findById(id: string): Promise<Movie> {
+    const movie = await this.movieModel.findOne({ _id: new Types.ObjectId(id) }).exec();
     if (!movie) {
       throw new NotFoundException(`Movie with ID ${id} not found`);
     }
@@ -54,7 +54,7 @@ export class MovieService {
       this.movieModel.find({
         $or: [
           { title: searchRegex },
-          { overview: searchRegex },
+          // { overview: searchRegex },
         ],
       })
         .sort({ sequentialId: 1 })

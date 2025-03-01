@@ -1,5 +1,6 @@
 'use client';
 
+import { Movie } from '@/types/types';
 import { useRouter } from 'next/navigation';
 import { 
   Card, 
@@ -10,14 +11,6 @@ import {
   Grid,
   CardActionArea
 } from '@mui/material';
-
-interface Movie {
-  id: number;
-  title: string;
-  description: string;
-  genre: string;
-  poster_path: string;
-}
 
 interface MovieListProps {
   genreName: string;

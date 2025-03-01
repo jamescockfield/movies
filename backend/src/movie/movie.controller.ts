@@ -41,7 +41,7 @@ export class MovieController {
   }
 
   @Get(':id')
-  async findOne(@Param('id', ParseIntPipe) id: number) {
+  async findOne(@Param('id') id: string) {
     return this.movieService.findById(id);
   }
 }

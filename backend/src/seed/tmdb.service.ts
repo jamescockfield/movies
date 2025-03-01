@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { MovieDb } from 'moviedb-promise';
 
@@ -6,7 +6,7 @@ import { MovieDb } from 'moviedb-promise';
 export class TmdbService {
   private movieDb!: MovieDb;
 
-  constructor(private configService: ConfigService) {}
+  constructor(@Inject(ConfigService) private configService: ConfigService) {}
 
   initClient(): void {
     this.movieDb = new MovieDb(this.configService.get('TMDB_API_KEY')!);
