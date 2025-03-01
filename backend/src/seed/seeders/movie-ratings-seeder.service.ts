@@ -5,10 +5,16 @@ import { User } from '../../user/user.schema';
 import { Genre } from '../../genre/genre.schema';
 import { Movie } from '../../movie/movie.schema';
 import { MovieRating } from '../../movie-rating/movie-rating.schema';
+import ratingComments from './rating-comments.json';
 
 interface MoviesByGenre {
   _id: number;
   movies: Movie[];
+}
+
+// Define the type for rating comments
+interface RatingComments {
+  [key: string]: string[];
 }
 
 @Injectable()
@@ -44,10 +50,16 @@ export class MovieRatingsSeederService {
       }
       
       moviesMatchingUserGenre.forEach(movie => {
+        const rating = Math.floor(Math.random() * 5) + 1;
+        // Get comments for this rating and select a random one
+        const comments = (ratingComments as RatingComments)[rating.toString()];
+        const randomCommentIndex = Math.floor(Math.random() * comments.length);
+        
         movieRatings.push({
           userId: user._id as User,
           movieId: movie._id as Movie,
-          rating: Math.floor(Math.random() * 5) + 1,
+          rating: rating,
+          comment: comments[randomCommentIndex]
         });
       });
     }

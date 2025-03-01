@@ -14,6 +14,9 @@ export class MovieRating extends Document {
   @Prop({ type: Number, required: true, min: 0.5, max: 5 })
   declare rating: number;
 
+  @Prop({ type: String, required: false })
+  declare comment: string;
+
   @Prop({ type: Date, default: Date.now })
   declare createdAt: Date;
 }
