@@ -91,7 +91,7 @@ export default function SearchPage() {
               </p>
               <p className="text-gray-700 line-clamp-3">{movie.overview}</p>
               <button 
-                onClick={() => router.push(`/movies/${movie.id}`)}
+                onClick={() => router.push(`/movies/${movie._id}`)}
                 className="mt-4 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
               >
                 View Details

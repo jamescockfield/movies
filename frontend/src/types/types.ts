@@ -30,7 +30,7 @@ export interface MovieRating {
 }
 
 export interface Movie {
-  id: number;
+  _id: number;
   title: string;
   poster_path: string;
   release_date: string;

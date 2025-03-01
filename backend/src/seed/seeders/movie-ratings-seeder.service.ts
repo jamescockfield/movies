@@ -43,7 +43,7 @@ export class MovieRatingsSeederService {
       moviesMatchingUserGenre.forEach(movie => {
         movieRatings.push({
           userId: user.id,
-          movieId: movie.sequentialId,
+          movieId: movie.id,
           rating: Math.floor(Math.random() * 5) + 1,
         });
       });

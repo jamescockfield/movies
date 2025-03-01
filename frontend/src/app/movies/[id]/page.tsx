@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import { useParams, useRouter } from 'next/navigation';
 import { useMovie } from '@/hooks/useMovie';
-import { Genre } from '@/types/types';
+import { useMovieRatings } from '@/hooks/useMovieRatings';
+import { Genre, MovieRating } from '@/types/types';
 import { 
   Box, 
   Typography, 
@@ -14,17 +15,37 @@ import {
   Chip,
   Button,
   Rating,
-  Divider
+  Divider,
+  Avatar,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText
 } from '@mui/material';
 import { fetchGenres } from '@/services/api/genres';
+import { Person as PersonIcon, Star as StarIcon } from '@mui/icons-material';
 
 export default function MovieDetailsPage() {
   const router = useRouter();
   const params = useParams();
   
-  const { movie, isLoading, error } = useMovie(params.id as string);
+  const { movie, isLoading: isMovieLoading, error: movieError } = useMovie(params.id as string);
+  const { 
+    ratings, 
+    averageRating, 
+    isLoading: isRatingsLoading, 
+    error: ratingsError, 
+    submitRating 
+  } = useMovieRatings(params.id as string);
+  
   const [isAuthChecked, setIsAuthChecked] = useState(false);
   const [genres, setGenres] = useState<Genre[]>([]);
+  const [openRatingDialog, setOpenRatingDialog] = useState(false);
+  const [userRating, setUserRating] = useState<number | null>(null);
 
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
@@ -48,9 +69,23 @@ export default function MovieDetailsPage() {
     getGenres();
   }, []);
 
+  const handleRatingSubmit = async () => {
+    if (userRating) {
+      try {
+        await submitRating(userRating);
+        setOpenRatingDialog(false);
+      } catch (error) {
+        console.error('Error submitting rating:', error);
+      }
+    }
+  };
+
   if (!isAuthChecked) {
     return null;
   }
+
+  const isLoading = isMovieLoading || isRatingsLoading;
+  const error = movieError || ratingsError;
 
   if (isLoading) {
     return (
@@ -143,22 +178,23 @@ export default function MovieDetailsPage() {
               </Typography>
             </Box>
             
-            {movie.vote_average && (
+            {/* Display average rating from our hook instead of TMDB rating */}
+            {averageRating !== null && (
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                 <Rating 
-                  value={movie.vote_average / 2} 
+                  value={averageRating} 
                   precision={0.5} 
                   readOnly 
                 />
                 <Typography variant="body2" sx={{ ml: 1 }}>
-                  {movie.vote_average.toFixed(1)}/10
+                  {averageRating.toFixed(1)}/5 ({ratings.length} {ratings.length === 1 ? 'rating' : 'ratings'})
                 </Typography>
               </Box>
             )}
             
             <Typography variant="h6" gutterBottom>Overview</Typography>
             <Typography variant="body1" paragraph>
-              {movie.description}
+              {movie.overview}
             </Typography>
             
             <Box sx={{ mt: 4 }}>
@@ -166,6 +202,7 @@ export default function MovieDetailsPage() {
                 variant="contained" 
                 color="primary"
                 sx={{ mr: 2 }}
+                onClick={() => setOpenRatingDialog(true)}
               >
                 Add Rating
               </Button>
@@ -183,10 +220,64 @@ export default function MovieDetailsPage() {
       <Divider sx={{ mb: 3 }} />
       
       <Paper elevation={2} sx={{ p: 3 }}>
-        <Typography variant="body1" color="text.secondary" align="center">
-          No ratings yet. Be the first to rate this movie!
-        </Typography>
+        {ratings.length > 0 ? (
+          <List>
+            {ratings.map((rating: MovieRating) => (
+              <ListItem key={rating.id} alignItems="flex-start" divider>
+                <ListItemAvatar>
+                  <Avatar>
+                    <PersonIcon />
+                  </Avatar>
+                </ListItemAvatar>
+                <ListItemText
+                  primary={
+                    <Box sx={{ display: 'flex', alignItems: 'center' }}>
+                      <Rating value={rating.rating} readOnly size="small" />
+                      <Typography variant="body2" sx={{ ml: 1 }}>
+                        {new Date(rating.createdAt).toLocaleDateString()}
+                      </Typography>
+                    </Box>
+                  }
+                  secondary={rating.comment || "No comment provided"}
+                />
+              </ListItem>
+            ))}
+          </List>
+        ) : (
+          <Typography variant="body1" color="text.secondary" align="center">
+            No ratings yet. Be the first to rate this movie!
+          </Typography>
+        )}
       </Paper>
+
+      {/* Rating Dialog */}
+      <Dialog open={openRatingDialog} onClose={() => setOpenRatingDialog(false)}>
+        <DialogTitle>Rate this movie</DialogTitle>
+        <DialogContent>
+          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', my: 2 }}>
+            <Typography variant="body1" gutterBottom>
+              How would you rate "{movie.title}"?
+            </Typography>
+            <Rating
+              name="movie-rating"
+              value={userRating}
+              onChange={(_, newValue) => setUserRating(newValue)}
+              precision={0.5}
+              size="large"
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setOpenRatingDialog(false)}>Cancel</Button>
+          <Button 
+            onClick={handleRatingSubmit} 
+            color="primary" 
+            disabled={!userRating}
+          >
+            Submit
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Container>
   );
 } 
