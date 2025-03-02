@@ -19,3 +19,13 @@ body {
   background: var(--background);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+@layer utilities {
+  .text-outline {
+    text-shadow:
+      -1px -1px 1px #888,
+      1px -1px 1px #888,
+      -1px 1px 1px #888,
+      1px 1px 1px #888;
+  }
+}

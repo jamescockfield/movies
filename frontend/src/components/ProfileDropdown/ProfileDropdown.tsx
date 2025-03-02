@@ -9,7 +9,7 @@ export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { user } = useUser();
+  const { userProfile: user } = useUser();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {

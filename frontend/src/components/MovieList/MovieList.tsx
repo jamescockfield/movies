@@ -27,7 +27,7 @@ export default function MovieList({ genreName, movies }: MovieListProps) {
   return (
     <Grid container spacing={2}>
       {movies.map((movie: Movie) => (
-        <Grid item key={movie._id} xs={12} sm={6} md={3} lg={1.5}>
+        <Grid item key={movie._id} xs={12} sm={6} md={3} lg={2}>
           <Card 
             sx={{ 
               height: '100%', 
@@ -64,7 +64,7 @@ export default function MovieList({ genreName, movies }: MovieListProps) {
                     mb: 1
                   }}
                 >
-                  {movie.description}
+                  {movie.overview}
                 </Typography>
                 <Box sx={{ mt: 'auto', textAlign: 'center' }}>
                   <img 

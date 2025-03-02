@@ -1,39 +1,30 @@
 import { useState, useEffect, useCallback } from 'react';
 import { UserProfile } from '@/types/types';
-import { getCurrentUserProfile, getUserById as fetchUserById } from '@/services/api/users';
+import { getCurrentUserProfile, getUserById } from '@/services/api/users';
 
-export function useUser() {
-  const [user, setUser] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+export function useUser(userId?: string) {
+  const [userProfile, setUserProfile] = useState<UserProfile | null>(null);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<Error | null>(null);
 
-  // Fetch the current logged-in user
+  // Fetch user profile data
   useEffect(() => {
-    const fetchUser = async () => {
+    const fetchUserProfile = async () => {
       try {
-        setLoading(true);
-        const profile = await getCurrentUserProfile();
-        setUser(profile);
+        setIsLoading(true);
+        const userData = userId ? await getUserById(userId) : await getCurrentUserProfile();
+        setUserProfile(userData);
       } catch (err) {
-        console.error('Failed to fetch user profile', err);
-        setError(err instanceof Error ? err : new Error('Unknown error'));
+        setError(err instanceof Error ? err : new Error('An unknown error occurred'));
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     };
 
-    fetchUser();
-  }, []);
-
-  // Function to get a user profile by ID (can be used for other users)
-  const getUserById = useCallback(async (userId: string): Promise<UserProfile> => {
-    try {
-      return await fetchUserById(userId);
-    } catch (err) {
-      console.error(`Error fetching user profile for ID: ${userId}`, err);
-      throw err;
+    if (userId) {
+      fetchUserProfile();
     }
-  }, []);
+  }, [userId]);
 
-  return { user, loading, error, getUserById };
-} 
+  return { userProfile, isLoading, error };
+}

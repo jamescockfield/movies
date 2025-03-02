@@ -10,7 +10,7 @@ import { useMoviesByGenre } from '@/hooks/useMoviesByGenre';
 import MovieList from './MovieList';
 
 export default function MovieListContainer() {
-  const { genres, moviesByGenre, isLoading, error } = useMoviesByGenre(8);
+  const { genres, moviesByGenre, isLoading, error } = useMoviesByGenre(6);
 
   if (isLoading) {
     return (

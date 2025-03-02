@@ -12,6 +12,7 @@ export const fetchMovieRatings = async (movieId: string): Promise<MovieRating[]>
   return response.json();
 };
 
+// TODO: consider storing the average rating in the movie object
 export const fetchMovieAverageRating = async (movieId: string): Promise<{ averageRating: number }> => {
   const url = `${config.apiUrl}/movie-ratings/movie/${movieId}/average`;
   
