@@ -29,6 +29,8 @@ import {
 } from '@mui/material';
 import { fetchGenres } from '@/services/api/genres';
 import { Person as PersonIcon, Star as StarIcon } from '@mui/icons-material';
+import BackToHome from '@/components/BackToHome/BackToHome';
+import { useGenres } from '@/hooks/useGenres';
 
 export default function MovieDetailsPage() {
   const router = useRouter();
@@ -43,32 +45,9 @@ export default function MovieDetailsPage() {
     submitRating 
   } = useMovieRatings(params.id as string);
   
-  const [isAuthChecked, setIsAuthChecked] = useState(false);
-  const [genres, setGenres] = useState<Genre[]>([]);
+  const { genres, isLoading: isGenresLoading, error: genresError } = useGenres();
   const [openRatingDialog, setOpenRatingDialog] = useState(false);
   const [userRating, setUserRating] = useState<number | null>(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-      router.push('/login');
-    } else {
-      setIsAuthChecked(true);
-    }
-  }, [router]);
-
-  useEffect(() => {
-    const getGenres = async () => {
-      try {
-        const data = await fetchGenres();
-        setGenres(data);
-      } catch (error) {
-        console.error('Error fetching genres:', error);
-      }
-    };
-
-    getGenres();
-  }, []);
 
   const handleRatingSubmit = async () => {
     if (userRating) {
@@ -81,12 +60,8 @@ export default function MovieDetailsPage() {
     }
   };
 
-  if (!isAuthChecked) {
-    return null;
-  }
-
-  const isLoading = isMovieLoading || isRatingsLoading;
-  const error = movieError || ratingsError;
+  const isLoading = isMovieLoading || isRatingsLoading || isGenresLoading;
+  const error = movieError || ratingsError || genresError;
 
   if (isLoading) {
     return (
@@ -97,33 +72,11 @@ export default function MovieDetailsPage() {
   }
 
   if (error) {
-    return (
-      <Container maxWidth="lg" sx={{ mt: 4 }}>
-        <Typography variant="h5" color="error" align="center">
-          Error loading movie: {error.message}
-        </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-          <Button variant="contained" onClick={() => router.push('/')}>
-            Back to Home
-          </Button>
-        </Box>
-      </Container>
-    );
+    return <BackToHome error={`Error loading movie: ${error.message}`} />;
   }
 
   if (!movie) {
-    return (
-      <Container maxWidth="lg" sx={{ mt: 4 }}>
-        <Typography variant="h5" align="center">
-          Movie not found
-        </Typography>
-        <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
-          <Button variant="contained" onClick={() => router.push('/')}>
-            Back to Home
-          </Button>
-        </Box>
-      </Container>
-    );
+    return <BackToHome error="Movie not found" />;
   }
 
   return (

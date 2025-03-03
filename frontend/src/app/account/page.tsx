@@ -1,58 +1,18 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { UserProfile } from '@/types/types';
-import { getCurrentUserProfile } from '@/services/api/users';
+import BackToHome from '@/components/BackToHome/BackToHome';
+import Spinner from '@/components/Spinner/Spinner';
+import { useUser } from '@/hooks/useUser';
 
 export default function AccountPage() {
-  const router = useRouter();
-  const [isLoading, setIsLoading] = useState(true);
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    
-    if (!token) {
-      router.push('/login');
-      return;
-    }
-    
-    const fetchProfile = async () => {
-      try {
-        const userProfile = await getCurrentUserProfile();
-        setProfile(userProfile);
-        setIsLoading(false);
-      } catch (err) {
-        setError('Failed to load account data');
-        setIsLoading(false);
-      }
-    };
-    
-    fetchProfile();
-  }, [router]);
+  const { userProfile: profile, isLoading, error } = useUser();
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-gray-900"></div>
-      </div>
-    );
+    return <Spinner />;
   }
 
   if (error) {
-    return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="text-red-500 mb-4">{error}</div>
-        <button 
-          onClick={() => router.push('/')}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Back to Home
-        </button>
-      </div>
-    );
+    return <BackToHome error={error.message} />;
   }
 
   return (
@@ -87,14 +47,7 @@ export default function AccountPage() {
           </div>
         )}
         
-        <div className="mt-8">
-          <button 
-            onClick={() => router.push('/')}
-            className="w-full px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            Back to Home
-          </button>
-        </div>
+        <BackToHome />
       </div>
     </div>
   );

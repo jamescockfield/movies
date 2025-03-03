@@ -3,6 +3,7 @@
 import { useParams, useRouter } from 'next/navigation';
 import { useUserRatings } from '@/hooks/useMovieRatings';
 import { useUser } from '@/hooks/useUser';
+import BackToHome from '@/components/BackToHome/BackToHome';
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -22,15 +23,7 @@ export default function ProfilePage() {
 
   if (userError || ratingsError) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen">
-        <div className="text-red-500 mb-4">{(userError || ratingsError)?.message}</div>
-        <button 
-          onClick={() => router.push('/')}
-          className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-        >
-          Back to Home
-        </button>
-      </div>
+      <BackToHome error={(userError || ratingsError)?.message} />
     );
   }
 
@@ -106,15 +99,8 @@ export default function ProfilePage() {
             </div>
           )}
         </div>
-        
-        <div className="flex justify-center">
-          <button 
-            onClick={() => router.push('/')}
-            className="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
-          >
-            Back to Home
-          </button>
-        </div>
+
+        <BackToHome />
       </div>
     </div>
   );
