@@ -1,7 +1,7 @@
 'use client';
 
-import BackToHome from '@/components/BackToHome/BackToHome';
-import Spinner from '@/components/Spinner/Spinner';
+import BackToHome from '@/components/ui/BackToHome';
+import Spinner from '@/components/ui/Spinner';
 import { useUser } from '@/hooks/useUser';
 
 export default function AccountPage() {
@@ -16,7 +16,7 @@ export default function AccountPage() {
   }
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen p-8">
+    <div className="flex flex-col items-center justify-center p-8">
       <div className="bg-white shadow-md rounded-lg p-8 max-w-md w-full">
         <h1 className="text-2xl font-bold mb-6 text-center">Account Settings</h1>
         

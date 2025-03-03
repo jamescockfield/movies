@@ -21,9 +21,7 @@ export function useUser(userId?: string) {
       }
     };
 
-    if (userId) {
-      fetchUserProfile();
-    }
+    fetchUserProfile();
   }, [userId]);
 
   return { userProfile, isLoading, error };

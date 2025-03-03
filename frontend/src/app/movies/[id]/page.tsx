@@ -1,73 +1,47 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useParams, useRouter } from 'next/navigation';
+import BackToHome from '@/components/ui/BackToHome';
+import RatingDialog from '@/components/movieDetails/RatingDialog';
+import UserRatings from '@/components/movieDetails/UserRatings';
+import { useGenres } from '@/hooks/useGenres';
 import { useMovie } from '@/hooks/useMovie';
 import { useMovieRatings } from '@/hooks/useMovieRatings';
-import { Genre, MovieRating } from '@/types/types';
-import { 
-  Box, 
-  Typography, 
-  CircularProgress, 
-  Container, 
-  Grid, 
-  Paper, 
-  Chip,
+import {
+  Box,
   Button,
+  Chip,
+  Container,
+  Grid,
+  Paper,
   Rating,
-  Divider,
-  Avatar,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  DialogActions,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Link
+  Typography
 } from '@mui/material';
-import { fetchGenres } from '@/services/api/genres';
-import { Person as PersonIcon, Star as StarIcon } from '@mui/icons-material';
-import BackToHome from '@/components/BackToHome/BackToHome';
-import { useGenres } from '@/hooks/useGenres';
+import { useParams, useRouter } from 'next/navigation';
+import { useState } from 'react';
+import Spinner from '@/components/ui/Spinner';
 
 export default function MovieDetailsPage() {
   const router = useRouter();
   const params = useParams();
-  
+
   const { movie, isLoading: isMovieLoading, error: movieError } = useMovie(params.id as string);
   const { 
     ratings, 
     averageRating, 
     isLoading: isRatingsLoading, 
-    error: ratingsError, 
-    submitRating 
+    error: ratingsError
   } = useMovieRatings(params.id as string);
-  
-  const { genres, isLoading: isGenresLoading, error: genresError } = useGenres();
-  const [openRatingDialog, setOpenRatingDialog] = useState(false);
-  const [userRating, setUserRating] = useState<number | null>(null);
 
-  const handleRatingSubmit = async () => {
-    if (userRating) {
-      try {
-        await submitRating(userRating);
-        setOpenRatingDialog(false);
-      } catch (error) {
-        console.error('Error submitting rating:', error);
-      }
-    }
-  };
+  const [openRatingDialog, setOpenRatingDialog] = useState(false);
+
+  const { genres, isLoading: isGenresLoading, error: genresError } = useGenres();
 
   const isLoading = isMovieLoading || isRatingsLoading || isGenresLoading;
   const error = movieError || ratingsError || genresError;
 
   if (isLoading) {
     return (
-      <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '70vh' }}>
-        <CircularProgress />
-      </Box>
+      <Spinner />
     );
   }
 
@@ -132,7 +106,6 @@ export default function MovieDetailsPage() {
               </Typography>
             </Box>
             
-            {/* Display average rating from our hook instead of TMDB rating */}
             {averageRating !== null && (
               <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
                 <Rating 
@@ -168,82 +141,10 @@ export default function MovieDetailsPage() {
         </Grid>
       </Paper>
       
-      <Typography variant="h5" gutterBottom sx={{ mt: 6, mb: 2 }}>
-        User Ratings
-      </Typography>
-      <Divider sx={{ mb: 3 }} />
-      
-      <Paper elevation={2} sx={{ p: 3 }}>
-        {ratings.length > 0 ? (
-          <List>
-            {ratings.map((rating: MovieRating) => (
-              <ListItem key={rating._id} alignItems="flex-start" divider>
-                <ListItemAvatar>
-                  <Avatar>
-                    <PersonIcon />
-                  </Avatar>
-                </ListItemAvatar>
-                <ListItemText
-                  primary={
-                    <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <Rating value={rating.rating} readOnly size="small" />
-                        <Typography variant="body2" sx={{ ml: 1 }}>
-                          {new Date(rating.createdAt).toLocaleDateString()}
-                        </Typography>
-                      </Box>
-                      <Link 
-                        href={`/profile/${rating.userId._id}`}
-                        sx={{ 
-                          textDecoration: 'none', 
-                          color: 'primary.main',
-                          '&:hover': { textDecoration: 'underline' }
-                        }}
-                      >
-                        {rating.userId.username || 'User'}
-                      </Link>
-                    </Box>
-                  }
-                  secondary={rating.comment || "No comment provided"}
-                />
-              </ListItem>
-            ))}
-          </List>
-        ) : (
-          <Typography variant="body1" color="text.secondary" align="center">
-            No ratings yet. Be the first to rate this movie!
-          </Typography>
-        )}
-      </Paper>
+      <UserRatings movieId={params.id as string} />
 
-      {/* Rating Dialog */}
-      <Dialog open={openRatingDialog} onClose={() => setOpenRatingDialog(false)}>
-        <DialogTitle>Rate this movie</DialogTitle>
-        <DialogContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', my: 2 }}>
-            <Typography variant="body1" gutterBottom>
-              How would you rate "{movie.title}"?
-            </Typography>
-            <Rating
-              name="movie-rating"
-              value={userRating}
-              onChange={(_, newValue) => setUserRating(newValue)}
-              precision={0.5}
-              size="large"
-            />
-          </Box>
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpenRatingDialog(false)}>Cancel</Button>
-          <Button 
-            onClick={handleRatingSubmit} 
-            color="primary" 
-            disabled={!userRating}
-          >
-            Submit
-          </Button>
-        </DialogActions>
-      </Dialog>
+      { /* TODO: refactor to avoid passing openRatingDialog and setOpenRatingDialog as props */}
+      <RatingDialog movie={movie} openRatingDialog={openRatingDialog} setOpenRatingDialog={setOpenRatingDialog} />
     </Container>
   );
 } 

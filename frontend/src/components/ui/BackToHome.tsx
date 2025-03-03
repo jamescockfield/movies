@@ -4,7 +4,7 @@ export default function BackToHome({ error }: { error?: string }) {
   const router = useRouter();
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen">
+    <div className="flex flex-col items-center justify-center">
       { error && <div className="text-red-500 mb-4">{ error }</div> }
       <button 
         onClick={() => router.push('/')}

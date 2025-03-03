@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { SeedService } from './seed/seed.service';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from './config/config.service';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   console.log('Starting server...');
@@ -17,7 +18,14 @@ async function bootstrap() {
     process.exit(1);
   }
 
-  app.enableCors();
+  app.use(cookieParser());
+
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type'],
+  });
 
   app.useGlobalPipes(new ValidationPipe({
     whitelist: true,

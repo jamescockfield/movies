@@ -31,7 +31,7 @@ export default function LoginForm() {
           id="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          className="mt-1 block w-full rounded-md px-2 border-gray-300 shadow-sm text-black"
           required
         />
       </div>
@@ -44,7 +44,7 @@ export default function LoginForm() {
           id="password"
           value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm"
+          className="mt-1 block w-full rounded-md px-2 border-gray-300 shadow-sm text-black"
           required
         />
       </div>

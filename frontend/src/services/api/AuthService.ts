@@ -1,8 +1,7 @@
 import { config } from '@/config/config';
 
 interface LoginResponse {
-  access: string;
-  refresh: string;
+  success: boolean;
 }
 
 interface LoginCredentials {

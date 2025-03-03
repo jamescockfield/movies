@@ -7,7 +7,6 @@ interface UseMovieRatingsResult {
   averageRating: number | null;
   isLoading: boolean;
   error: Error | null;
-  submitRating: (rating: number) => Promise<void>;
 }
 
 interface UseUserRatingsResult {
@@ -46,19 +45,17 @@ export const useMovieRatings = (movieId: string): UseMovieRatingsResult => {
     }
   }, [movieId]);
 
-  const submitRating = async (rating: number) => {
-    try {
-      await rateMovie(movieId, rating);
-      // Refresh ratings after submission
-      fetchData();
-    } catch (err) {
-      console.error('Error submitting rating:', err);
-      throw err instanceof Error ? err : new Error('An unknown error occurred');
-    }
-  };
-
-  return { ratings, averageRating, isLoading, error, submitRating };
+  return { ratings, averageRating, isLoading, error };
 }; 
+
+export const submitRating = async (movieId: string, rating: number) => {
+  try {
+    rateMovie(movieId, rating);
+  } catch (err) {
+    console.error('Error submitting rating:', err);
+    throw err instanceof Error ? err : new Error('An unknown error occurred');
+  }
+};
 
 export const useUserRatings = (userId: string): UseUserRatingsResult => {
   const [ratings, setRatings] = useState<MovieRating[]>([]);

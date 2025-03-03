@@ -10,8 +10,10 @@ export function middleware(request: NextRequest) {
     return NextResponse.next();
   }
 
-  const hasAuthCookie = request.cookies.has('accessToken');
+  const hasAuthCookie = request.cookies.has('access_token');
   if (!hasAuthCookie) {
+    console.log('No auth cookie found');
+    console.log(request.cookies)
     // Redirect to login if not authenticated
     const loginUrl = new URL('/login', request.url);
     loginUrl.searchParams.set('callbackUrl', pathname);

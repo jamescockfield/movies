@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import ProfileDropdown from '@/components/ProfileDropdown';
+import ProfileDropdown from '@/components/header/ProfileDropdown';
 
 export default function Header() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -59,7 +59,6 @@ export default function Header() {
           </div>
         </form>
 
-        {/* Profile Dropdown */}
         <ProfileDropdown />
       </div>
     </header>
