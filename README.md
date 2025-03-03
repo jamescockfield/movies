@@ -14,20 +14,33 @@ The project contains an API to create new users and make ratings
 How to run
 ==========
 ```bash
-docker-compose up -d
+docker-compose up mongo
+
+cd backend
 npm run seed
-npm run start
+npm run dev
+
+cd frontend
+npm run dev
 ```
 
+:white_check_mark: Included
+===========================
+* User / Genre / Movie / MovieRating seeding
+* Login / Logout / Authentication
+* Dashboard
+* Search Movies
+* Movie details with ratings
+* User profiles with ratings
+* User account page
 
-In progress
-===========
-:rocket: Deploy process on merge with jenkins
+:x: Pending
+================
+* User registration
+* Tensor recommendations currently disabled
 
-:earth_africa: Host on AWS
+:dart: Improvements
+===================
+* Host on AWS
 
-:rocket: basic React / Material UI or similar frontend
-
-:chart: api to create users / submit ratings
-
-:closed_lock_with_key: api auth
+* Deploy process on merge with jenkins
