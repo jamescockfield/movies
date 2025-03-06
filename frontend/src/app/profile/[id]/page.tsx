@@ -4,7 +4,7 @@ import { useParams } from 'next/navigation';
 import { useUserRatings } from '@/hooks/useMovieRatings';
 import { useUser } from '@/hooks/useUser';
 import BackToHome from '@/components/ui/BackToHome';
-import UserMovieRatings from '@/components/profile/UserMovieRatings';
+import UserMovieRatingList from '@/components/profile/UserMovieRatingList';
 import Spinner from '@/components/ui/Spinner';
 
 export default function ProfilePage() {
@@ -44,7 +44,7 @@ export default function ProfilePage() {
         </div>
       </div>
 
-      <UserMovieRatings userId={userId} ratings={ratings} />
+      <UserMovieRatingList userId={userId} ratings={ratings} />
 
       <BackToHome />
     </div>

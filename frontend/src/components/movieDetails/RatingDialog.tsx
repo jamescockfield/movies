@@ -24,7 +24,7 @@ export default function RatingDialog({ movie, openRatingDialog, setOpenRatingDia
       <Dialog open={openRatingDialog} onClose={() => setOpenRatingDialog(false)}>
         <DialogTitle>Rate this movie</DialogTitle>
         <DialogContent>
-          <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', my: 2 }}>
+          <Box className="flex flex-col items-center my-2">
             <Typography variant="body1" gutterBottom>
               How would you rate "{movie.title}"?
             </Typography>

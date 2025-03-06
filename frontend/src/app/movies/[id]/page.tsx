@@ -19,6 +19,7 @@ import {
 import { useParams, useRouter } from 'next/navigation';
 import { useState } from 'react';
 import Spinner from '@/components/ui/Spinner';
+import MoviePoster from '@/components/ui/MoviePoster';
 
 export default function MovieDetailsPage() {
   const router = useRouter();
@@ -40,9 +41,7 @@ export default function MovieDetailsPage() {
   const error = movieError || ratingsError || genresError;
 
   if (isLoading) {
-    return (
-      <Spinner />
-    );
+    return <Spinner />;
   }
 
   if (error) {
@@ -54,30 +53,20 @@ export default function MovieDetailsPage() {
   }
 
   return (
-    <Container maxWidth="lg" sx={{ mt: 4, mb: 8 }}>
+    <Container maxWidth="lg" className="mt-4 mb-8">
       <Button 
         variant="outlined" 
         onClick={() => router.back()}
-        sx={{ mb: 3 }}
       >
         Back
       </Button>
       
-      <Paper elevation={3} sx={{ p: 3, mb: 4 }}>
+      <Paper elevation={3} className="p-3 my-4">
         <Grid container spacing={4}>
           {/* Movie Poster */}
           <Grid item xs={12} md={4}>
-            <Box sx={{ textAlign: 'center' }}>
-              <img 
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
-                alt={movie.title}
-                style={{ 
-                  maxWidth: '100%', 
-                  height: 'auto',
-                  borderRadius: '8px',
-                  boxShadow: '0 4px 8px rgba(0,0,0,0.1)'
-                }}
-              />
+            <Box className="text-center">
+              <MoviePoster movie={movie} />
             </Box>
           </Grid>
           
@@ -87,33 +76,33 @@ export default function MovieDetailsPage() {
               {movie.title}
             </Typography>
             
-            <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
+            <Box className="flex items-center mb-2">
               <Chip 
                 label={genres.find(genre => genre.id === movie.genreId)?.name} 
                 color="primary" 
                 size="small" 
-                sx={{ mr: 1 }} 
+                className="mr-1" 
               />
               
               {movie.release_date && (
-                <Typography variant="body2" color="text.secondary" sx={{ mr: 2 }}>
+                <Typography variant="body2" color="text.secondary" className="mr-2">
                   {new Date(movie.release_date).getFullYear()}
                 </Typography>
               )}
               
               <Typography variant="body2" color="text.secondary">
-                2h 10m
+                2h 10m { /* TODO: fetch runtime from TMDB when seeding */ }
               </Typography>
             </Box>
             
             {averageRating !== null && (
-              <Box sx={{ display: 'flex', alignItems: 'center', mb: 3 }}>
+              <Box className="flex items-center mb-3" >
                 <Rating 
                   value={averageRating} 
                   precision={0.5} 
                   readOnly 
                 />
-                <Typography variant="body2" sx={{ ml: 1 }}>
+                <Typography variant="body2" className="ml-1">
                   {averageRating.toFixed(1)}/5 ({ratings.length} {ratings.length === 1 ? 'rating' : 'ratings'})
                 </Typography>
               </Box>
@@ -124,11 +113,11 @@ export default function MovieDetailsPage() {
               {movie.overview}
             </Typography>
             
-            <Box sx={{ mt: 4 }}>
+            <Box className="mt-4">
               <Button 
                 variant="contained" 
                 color="primary"
-                sx={{ mr: 2 }}
+                className="mr-2"
                 onClick={() => setOpenRatingDialog(true)}
               >
                 Add Rating

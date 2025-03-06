@@ -3,7 +3,6 @@
 import dynamic from 'next/dynamic';
 import { usePathname } from 'next/navigation';
 
-
 // Dynamically import the Header with no SSR to avoid hydration issues with auth state
 const Header = dynamic(() => import('@/components/header/Header'), { ssr: false });
 

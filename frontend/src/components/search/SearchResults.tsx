@@ -1,20 +1,16 @@
 import { Movie } from "@/types/types";
 import { useRouter } from "next/navigation";
+import MoviePoster from "../ui/MoviePoster";
 
 export const SearchResults = ({ movies }: { movies: Movie[] }) => {
     const router = useRouter();
 
     return (
-
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {movies.map(movie => (
           <div key={movie._id} className="bg-white rounded-lg shadow-md overflow-hidden">
             <div className="h-48 bg-gray-200 flex items-center justify-center">
-              <img 
-                src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`} 
-                alt={movie.title} 
-                className="w-full h-full object-cover"
-              />
+              <MoviePoster movie={movie} />
             </div>
             <div className="p-4">
               <h2 className="text-xl font-semibold mb-2">{movie.title}</h2>

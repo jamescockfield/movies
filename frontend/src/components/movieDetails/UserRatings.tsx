@@ -8,12 +8,12 @@ export default function UserRatings({ movieId }: { movieId: string }) {
     const { ratings } = useMovieRatings(movieId);
     return (
         <Box>
-            <Typography variant="h5" gutterBottom sx={{ mt: 6, mb: 2 }}>
+            <Typography variant="h5" gutterBottom className="mt-6 mb-2">
                 User Ratings
             </Typography>
-            <Divider sx={{ mb: 3 }} />
+            <Divider className="mb-3" />
 
-            <Paper elevation={2} sx={{ p: 3 }}>
+            <Paper elevation={2} className="p-3">
                 {ratings.length > 0 ? (
                     <List>
                         {ratings.map((rating: MovieRating) => (
@@ -28,7 +28,7 @@ export default function UserRatings({ movieId }: { movieId: string }) {
                                         <Box className="flex items-center justify-between">
                                             <Box className="flex items-center">
                                                 <Rating value={rating.rating} readOnly size="small" />
-                                                <Typography variant="body2" sx={{ ml: 1 }}>
+                                                <Typography variant="body2" className="ml-1">
                                                     {new Date(rating.createdAt).toLocaleDateString()}
                                                 </Typography>
                                             </Box>
