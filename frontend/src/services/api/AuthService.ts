@@ -10,6 +10,9 @@ interface LoginCredentials {
 }
 
 export class AuthService {
+
+  public static readonly SUCCESS_STATUS_CODES = [200, 201];
+
   private static instance: AuthService;
 
   private constructor() {}
@@ -46,8 +49,8 @@ export class AuthService {
     });
   }
 
-  async fetchWithAuth(url: string, options: RequestInit = {}): Promise<Response> {
-    const response = await fetch(url, {
+  async fetchWithAuth(path: string, options: RequestInit = {}): Promise<Response> {
+    const response = await fetch(`${config.apiUrl}${path}`, {
       ...options,
       credentials: 'include', // Important for cookies
       headers: {
@@ -66,11 +69,15 @@ export class AuthService {
       if (refreshResponse.ok) {
         // Server will set new HttpOnly cookies
         // Retry original request
-        return this.fetchWithAuth(url, options);
+        return this.fetchWithAuth(path, options);
       } else {
         // Refresh failed, redirect to login
         window.location.href = '/login';
       }
+    }
+
+    if (!AuthService.SUCCESS_STATUS_CODES.includes(response.status)) {
+      throw new Error(`HTTP error! status: ${response.status}`);
     }
 
     return response;

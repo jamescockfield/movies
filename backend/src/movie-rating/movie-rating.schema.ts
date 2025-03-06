@@ -1,7 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Schema as MongooseSchema } from 'mongoose';
-import { User } from '../user/user.schema';
-import { Movie } from '../movie/movie.schema';
+import { User } from '@/user/user.schema';
+import { Movie } from '@/movie/movie.schema';
 
 @Schema()
 export class MovieRating extends Document {

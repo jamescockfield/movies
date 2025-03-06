@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { fetchMovies } from '@/services/api/movies';
+import { fetchMoviesByGenreIds } from '@/services/api/movies';
 import { fetchGenres } from '@/services/api/genres';
 import { Movie, Genre, MoviesByGenre } from '@/types/types';
 
@@ -23,7 +23,7 @@ export const useMoviesByGenre = (moviesPerGenre: number = 8): MoviesByGenre => {
         const genreIds = fetchedGenres.map((genre: Genre) => genre.id);
         
         // Fetch movies filtered by genres with the specified amount per genre
-        const moviesData = await fetchMovies(genreIds, moviesPerGenre);
+        const moviesData = await fetchMoviesByGenreIds(genreIds, moviesPerGenre);
         
         // Set the movies by genre from the response
         setMoviesByGenre(moviesData.moviesByGenre);

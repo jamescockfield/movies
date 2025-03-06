@@ -1,5 +1,6 @@
 import { Controller, Get, Request, Inject, Param, NotFoundException } from '@nestjs/common';
 import { UserService } from './user.service';
+import { RequestWithUser } from '@/types/types';
 
 @Controller('users')
 export class UserController {
@@ -7,13 +8,8 @@ export class UserController {
     @Inject(UserService) private readonly userService: UserService,
   ) {}
 
-  @Get()
-  async findAll() {
-    return this.userService.findAll();
-  }
-
-  @Get('profile')
-  async getProfile(@Request() req: any) { // TODO: Replace any with a proper type
+  @Get('')
+  async getCurrentUser(@Request() req: RequestWithUser) {
     const user = await this.userService.findById(req.user.id);
     if (!user) {
       throw new Error('User not found');

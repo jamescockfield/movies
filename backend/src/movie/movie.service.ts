@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model, Types } from 'mongoose';
 import { Movie } from './movie.schema';
-import { Genre } from '../genre/genre.schema';
+import { Genre } from '@/genre/genre.schema';
 
 @Injectable()
 export class MovieService {

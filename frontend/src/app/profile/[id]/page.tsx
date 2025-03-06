@@ -1,7 +1,7 @@
 'use client';
 
 import { useParams } from 'next/navigation';
-import { useUserRatings } from '@/hooks/useMovieRatings';
+import { useUserMovieRatings } from '@/hooks/useMovieRatings';
 import { useUser } from '@/hooks/useUser';
 import BackToHome from '@/components/ui/BackToHome';
 import UserMovieRatingList from '@/components/profile/UserMovieRatingList';
@@ -11,7 +11,7 @@ export default function ProfilePage() {
   const params = useParams();
   const userId = params.id as string;
 
-  const { ratings, isLoading: ratingsLoading, error: ratingsError } = useUserRatings(userId);
+  const { ratings, isLoading: ratingsLoading, error: ratingsError } = useUserMovieRatings(userId);
   const { userProfile: profile, isLoading: userLoading, error: userError } = useUser(userId);
 
   if (userLoading || ratingsLoading) {

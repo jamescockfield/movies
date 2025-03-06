@@ -26,27 +26,6 @@ export class RecommenderService {
     return this.recommenderManager.modelExists();
   }
 
-  async getSimilarMovies(movieId: string, limit: number = 10) {
-    const allMovies = await this.movieService.findAll();
-    const targetMovie = allMovies.movies.find(m => m.id === parseInt(movieId));
-    
-    if (!targetMovie) {
-      throw new Error('Movie not found');
-    }
-
-    // Get movies with similar genres
-    const similarMovies = allMovies.movies
-      .filter(m => m.id !== targetMovie.id)
-      .map(movie => ({
-        ...movie,
-        similarity: this.calculateGenreSimilarity(targetMovie.genre_ids, movie.genre_ids)
-      }))
-      .sort((a, b) => b.similarity - a.similarity)
-      .slice(0, limit);
-
-    return similarMovies;
-  }
-
   async getPersonalizedRecommendations(userId: number, limit: number = 10) {
     return this.recommenderManager.recommend(userId);
   }
@@ -86,16 +65,6 @@ export class RecommenderService {
     return movieDetails;
   }
 
-  async getRecommendationsByGenre(genreId: string, limit: number = 10) {
-    const allMovies = await this.movieService.findAll();
-    
-    const moviesInGenre = allMovies.movies
-      .filter(movie => movie.genre_ids.includes(parseInt(genreId)))
-      .slice(0, limit);
-
-    return moviesInGenre;
-  }
-
   async getTopRatedMovies(limit: number = 10) {
     const allRatings = await this.movieRatingService.findAll();
     
@@ -130,6 +99,37 @@ export class RecommenderService {
     );
 
     return movieDetails;
+  }
+
+  async getRecommendationsByGenre(genreId: string, limit: number = 10) {
+    const allMovies = await this.movieService.findAll();
+    
+    const moviesInGenre = allMovies.movies
+      .filter(movie => movie.genre_ids.includes(parseInt(genreId)))
+      .slice(0, limit);
+
+    return moviesInGenre;
+  }
+
+  async getSimilarMovies(movieId: string, limit: number = 10) {
+    const allMovies = await this.movieService.findAll();
+    const targetMovie = allMovies.movies.find(m => m.id === parseInt(movieId));
+    
+    if (!targetMovie) {
+      throw new Error('Movie not found');
+    }
+
+    // Get movies with similar genres
+    const similarMovies = allMovies.movies
+      .filter(m => m.id !== targetMovie.id)
+      .map(movie => ({
+        ...movie,
+        similarity: this.calculateGenreSimilarity(targetMovie.genre_ids, movie.genre_ids)
+      }))
+      .sort((a, b) => b.similarity - a.similarity)
+      .slice(0, limit);
+
+    return similarMovies;
   }
 
   private calculateGenreSimilarity(genres1: number[], genres2: number[]): number {

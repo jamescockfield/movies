@@ -5,21 +5,9 @@ import { MovieService } from './movie.service';
 export class MovieController {
   constructor(@Inject(MovieService) private readonly movieService: MovieService) {}
 
-  @Get()
-  async findAll(
-    @Query('page', new ParseIntPipe({ optional: true })) page = 1,
-    @Query('limit', new ParseIntPipe({ optional: true })) limit = 20,
-    @Query('genreIds') genreIdsString?: string,
-    @Query('moviesPerGenre', new ParseIntPipe({ optional: true })) moviesPerGenre?: number,
-  ) {
-    // If genreIds are provided, parse them and return movies grouped by genre
-    if (genreIdsString) {
-      const genreIds = genreIdsString.split(',').map(id => parseInt(id, 10));
-      return this.movieService.findByGenres(genreIds, moviesPerGenre || 8);
-    }
-    
-    // Otherwise, return all movies with pagination
-    return this.movieService.findAll(page, limit);
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.movieService.findById(id);
   }
 
   @Get('search')
@@ -40,8 +28,14 @@ export class MovieController {
     return this.movieService.findByGenre(genreId, page, limit);
   }
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.movieService.findById(id);
+  @Get()
+  async findByGenreIds(
+    @Query('page', new ParseIntPipe({ optional: true })) page = 1,
+    @Query('limit', new ParseIntPipe({ optional: true })) limit = 20,
+    @Query('genreIds') genreIdsString: string,
+    @Query('moviesPerGenre', new ParseIntPipe({ optional: true })) moviesPerGenre: number,
+  ) {
+    const genreIds = genreIdsString.split(',').map(id => parseInt(id, 10));
+    return this.movieService.findByGenres(genreIds, moviesPerGenre || 8);
   }
 }

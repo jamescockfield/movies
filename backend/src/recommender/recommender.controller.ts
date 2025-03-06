@@ -5,14 +5,6 @@ import { RecommenderService } from './recommender.service';
 export class RecommenderController {
   constructor(private readonly recommenderService: RecommenderService) {}
 
-  @Get('similar/:movieId')
-  async getSimilarMovies(
-    @Param('movieId') movieId: string,
-    @Query('limit') limit: number = 10
-  ) {
-    return this.recommenderService.getSimilarMovies(movieId, limit);
-  }
-
   @Get('personalized')
   async getPersonalizedRecommendations(
     @Query('limit') limit: number = 10
@@ -27,6 +19,13 @@ export class RecommenderController {
     return this.recommenderService.getTrendingMovies(limit);
   }
 
+  @Get('top-rated')
+  async getTopRatedMovies(
+    @Query('limit') limit: number = 10
+  ) {
+    return this.recommenderService.getTopRatedMovies(limit);
+  }
+
   @Get('genre/:genreId')
   async getRecommendationsByGenre(
     @Param('genreId') genreId: string,
@@ -35,10 +34,11 @@ export class RecommenderController {
     return this.recommenderService.getRecommendationsByGenre(genreId, limit);
   }
 
-  @Get('top-rated')
-  async getTopRatedMovies(
+  @Get('similar/:movieId')
+  async getSimilarMovies(
+    @Param('movieId') movieId: string,
     @Query('limit') limit: number = 10
   ) {
-    return this.recommenderService.getTopRatedMovies(limit);
+    return this.recommenderService.getSimilarMovies(movieId, limit);
   }
 }
