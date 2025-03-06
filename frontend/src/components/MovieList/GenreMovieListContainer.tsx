@@ -3,14 +3,30 @@
 import { 
   Box, 
   Typography, 
-  Divider
 } from '@mui/material';
 import { useMoviesByGenre } from '@/hooks/useMoviesByGenre';
 import MovieList from './MovieList';
 import Spinner from '../ui/Spinner';
+import { useEffect, useState } from 'react';
 
 export default function MovieListGenres() {
-  const { genres, moviesByGenre, isLoading, error } = useMoviesByGenre(6);
+  const { genres, moviesByGenre, isLoading, error } = useMoviesByGenre(24);
+  const [readyLists, setReadyLists] = useState(new Set<string>());
+  const [isAllListsReady, setIsAllListsReady] = useState(false);
+
+  const handeListReady = (genreName: string) => {
+    setReadyLists((prev: Set<string>) => {
+      const newSet = new Set(prev);
+      newSet.add(genreName);
+      return newSet;
+    });
+  }
+
+  useEffect(() => {
+    if (readyLists.size === genres.length) {
+      setIsAllListsReady(true);
+    }
+  }, [genres, readyLists]);
 
   if (isLoading) {
     return <Spinner />;
@@ -30,12 +46,10 @@ export default function MovieListGenres() {
         
         return (
           <Box key={genre.id} className="mb-4">
-            <Typography variant="h5" className="mb-2 mt-4">
+            <Typography variant="h5" sx={{ margin: '5px 0 5px 0' }}>
               {genre.name}
             </Typography>
-            <Divider className="mb-2" />
-            
-            <MovieList genreName={genre.name} movies={moviesInGenre} />
+            <MovieList shouldDisplay={isAllListsReady} genreName={genre.name} movies={moviesInGenre} onReady={() => handeListReady(genre.name)} />
           </Box>
         );
       })}
