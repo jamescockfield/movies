@@ -1,21 +1,10 @@
 import { useState, useEffect } from 'react';
 import { fetchMovieRatings, fetchMovieAverageRating, rateMovie, fetchMovieRatingsByUserId } from '@/services/api/ratings';
 import { MovieRating } from '@/types/types';
+import { useFetch } from './useFetch';
 
-interface UseMovieRatingsResult {
-  ratings: MovieRating[];
-  averageRating: number | null;
-  isLoading: boolean;
-  error: Error | null;
-}
-
-interface UseUserRatingsResult {
-  ratings: MovieRating[];
-  isLoading: boolean;
-  error: Error | null;
-}
-
-export const useMovieRatings = (movieId: string): UseMovieRatingsResult => {
+// TODO: consider storing the average rating in the movie object and simplifying this hook
+export const useMovieRatings = (movieId: string) => {
   const [ratings, setRatings] = useState<MovieRating[]>([]);
   const [averageRating, setAverageRating] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -48,31 +37,13 @@ export const useMovieRatings = (movieId: string): UseMovieRatingsResult => {
   return { ratings, averageRating, isLoading, error };
 }; 
 
-export const useUserMovieRatings = (userId: string): UseUserRatingsResult => {
-  const [ratings, setRatings] = useState<MovieRating[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
-  const [error, setError] = useState<Error | null>(null);
+export const useUserMovieRatings = (userId: string) => {
+  const { data, isLoading, error } = useFetch<MovieRating[], string>(
+    fetchMovieRatingsByUserId,
+    userId
+  );
 
-  const fetchData = async () => {
-    try {
-      setIsLoading(true);
-      const ratingsData = await fetchMovieRatingsByUserId(userId);
-      setRatings(ratingsData);
-      setIsLoading(false);
-    } catch (err) {
-      console.error('Error fetching user ratings:', err);
-      setError(err instanceof Error ? err : new Error('An unknown error occurred'));
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (userId) {
-      fetchData();
-    }
-  }, [userId]);
-  
-  return { ratings, isLoading, error };
+  return { ratings: data || [], isLoading, error };
 };
 
 export const submitRating = async (movieId: string, rating: number) => {

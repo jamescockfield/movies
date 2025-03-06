@@ -1,6 +1,6 @@
 // TODO: consider using swagger on the backend to generate the types and a client library
 
-export interface UserProfile {
+export interface User {
   _id: string;
   username: string;
   isAdmin: boolean;
@@ -25,7 +25,7 @@ export interface MovieRating {
   rating: number;
   comment?: string;
   createdAt: string;
-  userId: Partial<UserProfile>;
+  userId: Partial<User>;
 }
 
 export interface Movie {

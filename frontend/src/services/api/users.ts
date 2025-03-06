@@ -1,13 +1,13 @@
 import { authService } from './AuthService';
-import { UserProfile } from '@/types/types';
+import { User } from '@/types/types';
 
-export const getCurrentUserProfile = async (): Promise<UserProfile> => {
+export const fetchCurrentUser = async (): Promise<User> => {
   const response = await authService.fetchWithAuth(`/users`);
   
   return response.json();
 };
 
-export const getUserById = async (userId: string): Promise<UserProfile> => {
+export const fetchUserById = async (userId: string): Promise<User> => {
   const response = await authService.fetchWithAuth(`/users/${userId}`);
   
   return response.json();

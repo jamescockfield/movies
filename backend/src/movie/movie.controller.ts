@@ -5,11 +5,6 @@ import { MovieService } from './movie.service';
 export class MovieController {
   constructor(@Inject(MovieService) private readonly movieService: MovieService) {}
 
-  @Get(':id')
-  async findOne(@Param('id') id: string) {
-    return this.movieService.findById(id);
-  }
-
   @Get('search')
   async search(
     @Query('q') query: string,
@@ -17,6 +12,11 @@ export class MovieController {
     @Query('limit', new ParseIntPipe({ optional: true })) limit = 20,
   ) {
     return this.movieService.search(query, page, limit);
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.movieService.findById(id);
   }
 
   @Get('genre/:genreId')

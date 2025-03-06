@@ -13,7 +13,7 @@ export const SearchResults = ({ movies }: { movies: Movie[] }) => {
               <MoviePoster movie={movie} />
             </div>
             <div className="p-4">
-              <h2 className="text-xl font-semibold mb-2">{movie.title}</h2>
+              <h2 className="text-xl font-semibold text-blue-600 mb-2 font">{movie.title}</h2>
               <p className="text-sm text-gray-500 mb-2">
                 Released: {new Date(movie.release_date).toLocaleDateString()}
               </p>

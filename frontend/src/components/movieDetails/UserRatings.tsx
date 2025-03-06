@@ -33,8 +33,8 @@ export default function UserRatings({ movieId }: { movieId: string }) {
                                                 </Typography>
                                             </Box>
                                             <Link
-                                                href={`/profile/${rating.userId._id}`}
-                                                className="text-primary-main hover:underline"
+                                                href={`/users/${rating.userId._id}`}
+                                                className="text-primary-main text-blue-600 hover:underline"
                                             >
                                                 {rating.userId.username || 'User'}
                                             </Link>

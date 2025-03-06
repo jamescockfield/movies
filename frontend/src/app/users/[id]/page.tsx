@@ -2,17 +2,17 @@
 
 import { useParams } from 'next/navigation';
 import { useUserMovieRatings } from '@/hooks/useMovieRatings';
-import { useUser } from '@/hooks/useUser';
+import { useUserById } from '@/hooks/useUser';
 import BackToHome from '@/components/ui/BackToHome';
-import UserMovieRatingList from '@/components/profile/UserMovieRatingList';
+import UserMovieRatingList from '@/components/users/UserMovieRatingList';
 import Spinner from '@/components/ui/Spinner';
 
-export default function ProfilePage() {
+export default function userPage() {
   const params = useParams();
   const userId = params.id as string;
 
   const { ratings, isLoading: ratingsLoading, error: ratingsError } = useUserMovieRatings(userId);
-  const { userProfile: profile, isLoading: userLoading, error: userError } = useUser(userId);
+  const { user, isLoading: userLoading, error: userError } = useUserById(userId);
 
   if (userLoading || ratingsLoading) {
     return (
@@ -30,11 +30,11 @@ export default function ProfilePage() {
     <div className="flex flex-col items-center min-h-screen p-8">
       <div className="flex flex-col md:flex-row items-center md:items-start w-full max-w-4xl gap-8 mb-10">
         <div className="h-32 w-32 rounded-full bg-gray-200 flex items-center justify-center text-gray-500 text-4xl">
-          {profile?.username.charAt(0).toUpperCase()}
+          {user?.username.charAt(0).toUpperCase()}
         </div>
         
         <div className="flex flex-col items-center md:items-start">
-          <h1 className="text-3xl font-bold mb-2">{profile?.username}'s Profile</h1>
+          <h1 className="text-3xl font-bold mb-2">{user?.username}</h1>
           <p className="text-gray-600 mb-4">Movie enthusiast</p>
           <div className="flex gap-2">
             <div className="bg-green-700 px-3 py-1 rounded-full text-sm">

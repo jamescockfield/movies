@@ -3,13 +3,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { authService } from '@/services/api/AuthService';
-import { useUser } from '@/hooks/useUser';
+import { useCurrentUser } from '@/hooks/useUser';
 
 export default function ProfileDropdown() {
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
-  const { userProfile: user } = useUser();
+  const { user } = useCurrentUser();
 
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
@@ -31,7 +31,7 @@ export default function ProfileDropdown() {
 
   const handleViewProfile = () => {
     if (user) {
-      router.push(`/profile/${user._id}`);
+      router.push(`/users/${user._id}`);
       setIsOpen(false);
     }
   };
